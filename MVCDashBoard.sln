@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCDashBoard", "MVCDashBoard.csproj", "{733BEA61-AACB-4585-9C39-4A9820623954}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistance", "..\Persistance\Persistance.csproj", "{D9997508-6117-4A8F-8747-3994687E0C1B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{733BEA61-AACB-4585-9C39-4A9820623954}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{733BEA61-AACB-4585-9C39-4A9820623954}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{733BEA61-AACB-4585-9C39-4A9820623954}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{733BEA61-AACB-4585-9C39-4A9820623954}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9997508-6117-4A8F-8747-3994687E0C1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9997508-6117-4A8F-8747-3994687E0C1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9997508-6117-4A8F-8747-3994687E0C1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9997508-6117-4A8F-8747-3994687E0C1B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {170A9327-9C8D-4A5E-A1D4-4CE24A415B9F}
+	EndGlobalSection
+EndGlobal
