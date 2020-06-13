@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCDashBoard", "MVCDashBoar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistance", "ClassLibrary1\Persistance.csproj", "{6E306141-89C2-4A55-8A68-16D3457376BA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{A8D1A21C-03D1-46C5-BA3A-E86D735B16C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6E306141-89C2-4A55-8A68-16D3457376BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E306141-89C2-4A55-8A68-16D3457376BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E306141-89C2-4A55-8A68-16D3457376BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8D1A21C-03D1-46C5-BA3A-E86D735B16C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8D1A21C-03D1-46C5-BA3A-E86D735B16C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8D1A21C-03D1-46C5-BA3A-E86D735B16C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8D1A21C-03D1-46C5-BA3A-E86D735B16C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
