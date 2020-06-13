@@ -878,7 +878,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="ClassLibrary1\Persistance.csproj">
+    <ProjectReference Include="Persistance\Persistance.csproj">
       <Project>{6E306141-89C2-4A55-8A68-16D3457376BA}</Project>
       <Name>Persistance</Name>
     </ProjectReference>

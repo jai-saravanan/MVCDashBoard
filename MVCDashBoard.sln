@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCDashBoard", "MVCDashBoard.csproj", "{733BEA61-AACB-4585-9C39-4A9820623954}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistance", "ClassLibrary1\Persistance.csproj", "{6E306141-89C2-4A55-8A68-16D3457376BA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistance", "Persistance\Persistance.csproj", "{6E306141-89C2-4A55-8A68-16D3457376BA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{A8D1A21C-03D1-46C5-BA3A-E86D735B16C7}"
 EndProject
