@@ -17,7 +17,7 @@ namespace MVCDashBoard.Controllers
         public DashboardController(IDashBoardService dashBoardService)
         {
             _dashBoardService = dashBoardService;
-            
+
         }
 
         // GET: Dashboard
@@ -50,20 +50,33 @@ namespace MVCDashBoard.Controllers
 
             return Json(new
             {
-                totalSaleTarget,
-                totalOrder,
-                totalSale,
-                remainingTarget,
-                totalRecoveryTarget,
-                recoveryReceived,
-                remainingRecovery,
-                cashInHand,
-                cashInBank,
-                totalCashAndBanks,
-                totalPurchaseOrder,
-                totalPurchase,
-                remainingPurchase
+                totalSaleTarget = decimal.Round(totalSaleTarget),
+                totalOrder = decimal.Round(totalOrder),
+                totalSale = decimal.Round(totalSale),
+                remainingTarget = decimal.Round(remainingTarget),
+                totalRecoveryTarget = decimal.Round(totalRecoveryTarget),
+                recoveryReceived = decimal.Round(recoveryReceived),
+                remainingRecovery = decimal.Round(remainingRecovery),
+                cashInHand = decimal.Round(cashInHand),
+                cashInBank = decimal.Round(cashInBank),
+                totalCashAndBanks = decimal.Round(totalCashAndBanks),
+                totalPurchaseOrder = decimal.Round(totalPurchaseOrder),
+                totalPurchase = decimal.Round(totalPurchase),
+                remainingPurchase = decimal.Round(remainingPurchase)
             }, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetDashBoardPartyWiseSalesData()
+        {
+            _sessionInfo = Session["UserInfo"] as SessionInfo;
+            var fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-4);
+            var toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1, 1).AddMonths(-4);
+
+
+            var outerData = _dashBoardService.PartyWiseSaleOuterGrid(fromDate, toDate, _sessionInfo.UnitYear);
+            var innerData = _dashBoardService.PurchaseWiseSaleInnerGrid(fromDate, toDate, _sessionInfo.UnitYear);
+
+            return Json(new { data = outerData }, JsonRequestBehavior.AllowGet);
         }
 
     }

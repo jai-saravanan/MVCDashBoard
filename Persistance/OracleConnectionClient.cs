@@ -338,6 +338,53 @@ namespace Persistance
             return 0;
         }
 
+        public List<PartyWiseSaleInnerInfo> PurchaseWiseSaleInnerGrid(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            List<PartyWiseSaleInnerInfo> result = new List<PartyWiseSaleInnerInfo>();
+            try
+            {
+                OracleCommand command = new OracleCommand($"SELECT smst.name," +
+                    $"  'Dispatch '|| LISTAGG(descr||'  '||(nvl(ctn,0)), ',') WITHIN GROUP (ORDER BY smst.pdate,smst.name)" +
+                    $" FROM smst,sdtl" +
+                    $" where smst.unit_year=sdtl.unit_year" +
+                    $" and pdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}'" +
+                    $" and smst.inv=sdtl.inv" +
+                    $" and sdtl.unit_year='{unitYear}'" +
+                    $" GROUP BY smst.name" +
+                    $" union all" +
+                    $" SELECT order_smst.name," +
+                    $" 'Order '|| LISTAGG(descr||'  '||ctn, ',') WITHIN GROUP (ORDER BY order_smst.pdate,order_smst.name)" +
+                    $" FROM order_smst,order_sdtl" +
+                    $" where order_smst.unit_year=order_sdtl.unit_year" +
+                    $" and order_smst.inv=order_sdtl.inv" +
+                    $" and  pdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}'" +
+                    $" and order_sdtl.unit_year='{unitYear}'" +
+                    $" GROUP BY order_smst.name" +
+                    $" order by name");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.Add(new PartyWiseSaleInnerInfo()
+                    {
+                        Name = Convert.ToString(reader[0]),
+                        Detail = Convert.ToString(reader[1])
+                    });
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return result;
+        }
+
         public List<PartyWiseSaleOuterInfo> PartyWiseSaleOuterGrid(DateTime fromData, DateTime toDate, string unitYear)
         {
             List<PartyWiseSaleOuterInfo> result = new List<PartyWiseSaleOuterInfo>();

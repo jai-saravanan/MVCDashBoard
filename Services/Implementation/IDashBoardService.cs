@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Domain.Models;
+using System;
+using System.Collections.Generic;
 
 namespace MVCDashBoard.Services.Implementation
 {
@@ -21,5 +23,9 @@ namespace MVCDashBoard.Services.Implementation
         decimal GetTotalPurchaseOrder(DateTime fromData, DateTime toDate, string unitYear);
 
         decimal GetTotalPurchase(DateTime fromData, DateTime toDate, string unitYear);
+
+        List<PartyWiseSaleInnerInfo> PurchaseWiseSaleInnerGrid(DateTime fromData, DateTime toDate, string unitYear);
+
+        List<PartyWiseSaleOuterInfo> PartyWiseSaleOuterGrid(DateTime fromData, DateTime toDate, string unitYear);
     }
 }

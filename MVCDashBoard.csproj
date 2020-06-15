@@ -832,6 +832,7 @@
     <Content Include="AdminLTE\plugins\input-mask\phone-codes\phone-be.json" />
     <Content Include="AdminLTE\plugins\input-mask\phone-codes\phone-codes.json" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\dashboard.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />

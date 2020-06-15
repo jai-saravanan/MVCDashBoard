@@ -9,5 +9,12 @@
         public string TotalSale  { get; set; }  
         public string RemainingSale { get; set; }      
     }
+
+    public class PartyWiseSaleInnerInfo
+    {
+        public string Name { get; set; }
+
+        public string Detail { get; set; }
+    }
 }
     

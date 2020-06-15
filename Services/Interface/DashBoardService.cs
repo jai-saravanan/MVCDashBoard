@@ -1,6 +1,8 @@
-﻿using MVCDashBoard.Services.Implementation;
+﻿using Domain.Models;
+using MVCDashBoard.Services.Implementation;
 using Persistance;
 using System;
+using System.Collections.Generic;
 
 namespace MVCDashBoard.Services.Interface
 {
@@ -56,6 +58,16 @@ namespace MVCDashBoard.Services.Interface
         public decimal GetTotalSale(DateTime fromData, DateTime toDate, string unitYear)
         {
             return _oracleConnectionClient.GetTotalSale(fromData, toDate, unitYear);
+        }
+
+        public List<PartyWiseSaleOuterInfo> PartyWiseSaleOuterGrid(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            return _oracleConnectionClient.PartyWiseSaleOuterGrid(fromData, toDate, unitYear);
+        }
+
+        public List<PartyWiseSaleInnerInfo> PurchaseWiseSaleInnerGrid(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            return _oracleConnectionClient.PurchaseWiseSaleInnerGrid(fromData, toDate, unitYear);
         }
     }
 }
