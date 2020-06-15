@@ -3,5 +3,116 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Dashboard
+        <small>Control panel</small>
+    </h1>
+</section>
+<!-- Main content -->
+<section class="content">
+    <!-- Small boxes (Stat box) -->
+    <div class="row">
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <div class="col-lg-8">
+                        <p>Total Target</p>
+                        <p>This Month Order</p>
+                        <p>This Month Sale</p>
+                        <p>Remaining Target</p>
+                    </div>
+                    <div>
+                        <p id="totalTarget">150</p>
+                        <p id="thisMonthOrder">150</p>
+                        <p id="thisMonthSale">150</p>
+                        <p id="remainingTarget">150</p>
+                    </div>
+                </div>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-green">
+                <div class="inner">
+                    <div class="col-lg-8">
+                        <p>Total Recovery Target</p>
+                        <p>&nbsp;&nbsp;</p>
+                        <p>Total Received</p>
+                        <p>Remaining Recovery</p>
+                    </div>
+                    <div>
+                        <p id="totalRecoveryTarget">150</p>
+                        <p>&nbsp;&nbsp;</p>
+                        <p id="totalReceived">150</p>
+                        <p id="remainingRecovery">150</p>
+                    </div>
+                </div>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-yellow">
+                <div class="inner">
+                    <div class="col-lg-8">
+                        <p>Total Cash In Hand</p>
+                        <p>&nbsp;&nbsp;</p>
+                        <p>Total In Banks</p>
+                        <p>Total Cash & Banks</p>
+                    </div>
+                    <div>
+                        <p id="totalCashInHand">150</p>
+                        <p>&nbsp;&nbsp;</p>
+                        <p id="totalInBanks">150</p>
+                        <p id="totalCashAndBanks">150</p>
+                    </div>
+                </div>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-red">
+                <div class="inner">
+                    <div class="col-lg-8">
+                        <p>Total Purchase Order</p>
+                        <p>&nbsp;&nbsp;</p>
+                        <p>Total Purchase</p>
+                        <p>Remaining Purchase</p>
+                    </div>
+                    <div>
+                        <p id="totalPurchaseOrder">150</p>
+                        <p>&nbsp;&nbsp;</p>
+                        <p id="totalPurchase">150</p>
+                        <p id="remainingPurchase">150</p>
+                    </div>
+                </div>
+            </div>
+        </div><!-- ./col -->
+    </div><!-- /.row -->
+</section><!-- /.content -->
+<script src="~/AdminLTE/plugins/jQuery/jQuery-2.1.3.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: "DashBoard/GetDashBoardData", success: function (result) {
+                debugger
+                $('#totalTarget').text(result.totalSaleTarget);
+                $('#thisMonthOrder').text(result.totalOrder);
+                $('#thisMonthSale').text(result.totalSale);
+                $('#remainingTarget').text(result.remainingTarget);
+                $('#totalRecoveryTarget').text(result.totalRecoveryTarget);
+                $('#totalReceived').text(result.recoveryReceived);
+                $('#remainingRecovery').text(result.remainingRecovery);
+                $('#totalCashInHand').text(result.cashInHand);
+                $('#totalInBanks').text(result.cashInBank);
+                $('#totalCashAndBanks').text(result.totalCashAndBanks);
+                $('#totalPurchaseOrder').text(result.totalPurchaseOrder);
+                $('#totalPurchase').text(result.totalPurchase);
+                $('#remainingPurchase').text(result.remainingPurchase);
+            }
+        });
+    });
 
+</script>

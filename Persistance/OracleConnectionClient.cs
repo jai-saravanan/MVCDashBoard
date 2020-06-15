@@ -1,4 +1,5 @@
-﻿using Domain.ViewModel;
+﻿using Domain.Models;
+using Domain.ViewModel;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
@@ -93,6 +94,297 @@ namespace Persistance
                 oracleConnection.Close();
             }
 
+        }
+
+        public decimal GetSaleTarget(string accountNumber, string unitYear)
+        {
+            try
+            {
+                OracleCommand command = new OracleCommand($"select  sum(nvl(sale_target,0)) from chart where  substr(account_no, 1, 4) = '{accountNumber}' " +
+                    $"and unit_year='{unitYear}'");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    return GetIntValue(Convert.ToString(reader[0]));
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return 0;
+        }
+
+        public decimal GetTotalOrder(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            try
+            {
+                OracleCommand command = new OracleCommand($"select sum(nvl(amt,0)) total_sale_order  from order_smst " +
+                    $"where pdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' " +
+                    $"and unit_year='{unitYear}'");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    return GetIntValue(Convert.ToString(reader[0]));
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return 0;
+        }
+
+        public decimal GetTotalSale(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            try
+            {
+                OracleCommand command = new OracleCommand($"select  sum(nvl(debit,0)) from ledger where  vType='SV'  " +
+                    $"and gdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' " +
+                    $"and unit_year='{unitYear}'");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    return GetIntValue(Convert.ToString(reader[0]));
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return 0;
+        }
+
+        public decimal GetTotalRecoveryTarget(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            try
+            {
+                OracleCommand command = new OracleCommand($"select  sum(nvl(recovery_target,0))   from targets where " +
+                    $"tdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' " +
+                    $"and unit_year='{unitYear}'");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    return GetIntValue(Convert.ToString(reader[0]));
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return 0;
+        }
+
+        public decimal GetTotalRecoveryReceived(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            try
+            {
+                OracleCommand command = new OracleCommand($"select  sum(nvl(credit,0))   from ledger where  vType='CR' and " +
+                    $"gdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' " +
+                    $"and unit_year='{unitYear}'");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    return GetIntValue(Convert.ToString(reader[0]));
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return 0;
+        }
+
+        public decimal GetTotalCashInHand(DateTime fromData, DateTime toDate, string accountNumber, string unitYear)
+        {
+            try
+            {
+                OracleCommand command = new OracleCommand($"select  (sum(nvl(debit,0))-sum(nvl(credit,0)))   from ledger where  account_no='{accountNumber}' and  " +
+                    $"gdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' " +
+                    $"and unit_year='{unitYear}'");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    return GetIntValue(Convert.ToString(reader[0]));
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return 0;
+        }
+
+        public decimal GetTotalCashInBanks(DateTime fromData, DateTime toDate, string accountNumber, string unitYear)
+        {
+            try
+            {
+                OracleCommand command = new OracleCommand($"select  (sum(nvl(debit,0))-sum(nvl(credit,0)))   from ledger where  account_no<>'{accountNumber}' and substr(account_no,1,4)='{accountNumber.Substring(0, 4)}' and " +
+                    $"gdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' " +
+                    $"and unit_year='{unitYear}'");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    return GetIntValue(Convert.ToString(reader[0]));
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return 0;
+        }
+
+        public decimal GetTotalPurchaseOrder(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            try
+            {
+                OracleCommand command = new OracleCommand($"select  sum(nvl(amt,0))   from po_mst where  " +
+                    $"pdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' " +
+                    $"and unit_year='{unitYear}'");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    return GetIntValue(Convert.ToString(reader[0]));
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return 0;
+        }
+
+        public decimal GetTotalPurchase(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            try
+            {
+                OracleCommand command = new OracleCommand($"select sum(nvl(credit,0))  from ledger where  vType='PV' and      " +
+                    $"gdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' " +
+                    $"and unit_year='{unitYear}'");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    return GetIntValue(Convert.ToString(reader[0]));
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return 0;
+        }
+
+        public List<PartyWiseSaleOuterInfo> PartyWiseSaleOuterGrid(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            List<PartyWiseSaleOuterInfo> result = new List<PartyWiseSaleOuterInfo>();
+            try
+            {
+                OracleCommand command = new OracleCommand($"select chart.account_no,chart.name,nvl(chart.sale_target,0) sale_target,sum(nvl(total_sale_order,0)) total_order,sum(nvl(total_sale,0)) total_sale," +
+                    $"  nvl(chart.sale_target,0)-sum(nvl(total_sale,0)) remaining_sale from dashboard_view,chart" +
+                    $" where dashboard_view.pcode=chart.account_no" +
+                    $" and dashboard_view.pdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}'" +
+                    $" and substr(chart.account_no,1,4)='1007'" +
+                    $" and chart.unit_year=dashboard_view.unit_year" +
+                    $" and chart.unit_year='{unitYear}'" +
+                    $" group by chart.account_no,chart.name,chart.sale_target");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.Add(new PartyWiseSaleOuterInfo()
+                    {
+                        AccountNumber = Convert.ToString(reader[0]),
+                        Name = Convert.ToString(reader[1]),
+                        SalesTarget = Convert.ToString(reader[2]),
+                        TotalOrder = Convert.ToString(reader[3]),
+                        TotalSale = Convert.ToString(reader[4]),
+                        RemainingSale = Convert.ToString(reader[5])
+                    });
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return result;
+        }
+
+
+        private decimal GetIntValue(string number)
+        {
+            decimal value = 0;
+            decimal.TryParse(number, out value);
+            return value;
         }
     }
 }

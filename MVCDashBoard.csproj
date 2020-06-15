@@ -153,6 +153,8 @@
     <Compile Include="Models\SessionInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Implementation\AccountService.cs" />
+    <Compile Include="Services\Implementation\IDashBoardService.cs" />
+    <Compile Include="Services\Interface\DashBoardService.cs" />
     <Compile Include="Services\Interface\IAccountService.cs" />
   </ItemGroup>
   <ItemGroup>
