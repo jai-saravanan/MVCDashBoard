@@ -344,7 +344,7 @@ namespace Persistance
             try
             {
                 OracleCommand command = new OracleCommand($"SELECT smst.name," +
-                    $"  'Dispatch '|| LISTAGG(descr||'  '||(nvl(ctn,0)), ',') WITHIN GROUP (ORDER BY smst.pdate,smst.name)" +
+                    $"  ''|| LISTAGG(descr||'  '||(nvl(ctn,0)), ',') WITHIN GROUP (ORDER BY smst.pdate,smst.name)" +
                     $" FROM smst,sdtl" +
                     $" where smst.unit_year=sdtl.unit_year" +
                     $" and pdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}'" +
@@ -353,7 +353,7 @@ namespace Persistance
                     $" GROUP BY smst.name" +
                     $" union all" +
                     $" SELECT order_smst.name," +
-                    $" 'Order '|| LISTAGG(descr||'  '||ctn, ',') WITHIN GROUP (ORDER BY order_smst.pdate,order_smst.name)" +
+                    $" ''|| LISTAGG(descr||'  '||ctn, ',') WITHIN GROUP (ORDER BY order_smst.pdate,order_smst.name)" +
                     $" FROM order_smst,order_sdtl" +
                     $" where order_smst.unit_year=order_sdtl.unit_year" +
                     $" and order_smst.inv=order_sdtl.inv" +

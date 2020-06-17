@@ -76,7 +76,18 @@ namespace MVCDashBoard.Controllers
             var outerData = _dashBoardService.PartyWiseSaleOuterGrid(fromDate, toDate, _sessionInfo.UnitYear);
             var innerData = _dashBoardService.PurchaseWiseSaleInnerGrid(fromDate, toDate, _sessionInfo.UnitYear);
 
-            return Json(new { data = outerData }, JsonRequestBehavior.AllowGet);
+            foreach (var item in outerData)
+            {
+                var orderDetail = innerData?.Where(x => x.Name == item.Name)?.Select(x => x.Detail)?.OrderByDescending(x => x);
+                if (orderDetail != null || orderDetail.Count() > 0)
+                {
+                    item.OrderDetail = new List<string>();
+                    item.OrderDetail.AddRange(orderDetail);
+                }
+
+            }
+
+            return Json(new { data = outerData.OrderBy(x => x.Name) }, JsonRequestBehavior.AllowGet);
         }
 
     }

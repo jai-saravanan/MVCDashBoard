@@ -18,14 +18,29 @@ $(document).ready(function () {
         }
     });
 
-
+    var buttonCommon = {
+        exportOptions: {
+            format: {
+                body: function (data, row, column, node) {
+                    // Strip $ from salary column to make it numeric
+                    return data;
+                }
+            }
+        }
+    };
 
     var dt = $('#example,#exampleGrid').DataTable({
         ajax: "/dashboard/getdashboardpartywisesalesdata",
         columns: [
-            
+
             { "data": "AccountNumber" },
-            { "data": "Name", "class": "details-control"},
+            {
+                "class": "details-control",
+                "orderable": false,
+                "data": null,
+                "defaultContent": ""
+            },
+            { "data": "Name", "class": "details-control-click" },
             { "data": "SalesTarget" },
             { "data": "TotalOrder" },
             { "data": "TotalSale" },
@@ -33,8 +48,9 @@ $(document).ready(function () {
         ],
         "columnDefs": [
             {
-                "targets": [2],
-                "className": "text-right",
+                "targets": [0],
+                "visible": false,
+                "searchable": false,
             },
             {
                 "targets": [3],
@@ -47,15 +63,100 @@ $(document).ready(function () {
             {
                 "targets": [5],
                 "className": "text-right",
+            },
+            {
+                "targets": [6],
+                "className": "text-right",
             }
-        ]
+        ],
+        "order": [[2, 'asc']],
+        dom: 'Bfrtip',
+        buttons: [
+            $.extend(true, {}, buttonCommon, {
+                extend: 'copyHtml5',
+                exportOptions: {
+                    columns: [0, 2, 3, 4, 5, 6]
+                }
+            }),
+            $.extend(true, {}, buttonCommon, {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [0, 2, 3, 4, 5, 6]
+                }
+            }),
+            $.extend(true, {}, buttonCommon, {
+                extend: 'print',
+                exportOptions: {
+                    columns: [0, 2, 3, 4, 5, 6]
+                }
+            }),
+            $.extend(true, {}, buttonCommon, {
+                extend: 'pdfHtml5',
+                exportOptions: {
+                    columns: [0, 2, 3, 4, 5, 6]
+                }
+            })
+        ],
+        "footerCallback": function (row, data, start, end, display) {
+            var api = this.api(), data;
+
+            // Total over all pages
+            totalSaleTarget = api
+                .column(3)
+                .data()
+                .reduce(function (a, b) {
+                    return parseInt(a) + parseInt(b);
+                }, 0);
+
+            // Total over all pages
+            totalOrder = api
+                .column(4)
+                .data()
+                .reduce(function (a, b) {
+                    return parseInt(a) + parseInt(b);
+                }, 0);
+
+
+            // Total over all pages
+            totalSale = api
+                .column(5)
+                .data()
+                .reduce(function (a, b) {
+                    return parseInt(a) + parseInt(b);
+                }, 0);
+
+            // Total over all pages
+            remainingSale = api
+                .column(6)
+                .data()
+                .reduce(function (a, b) {
+                    return parseInt(a) + parseInt(b);
+                }, 0);
+
+            // Update footer
+            $(api.column(3).footer()).html(
+                '<b><span id="footerTotal">' + totalSaleTarget + '</span></b>'
+            );
+
+            $(api.column(4).footer()).html(
+                '<b><span id="footerTotal">' + totalOrder + '</span></b>'
+            );
+
+            $(api.column(5).footer()).html(
+                '<b><span id="footerTotal">' + totalSale + '</span></b>'
+            );
+
+            $(api.column(6).footer()).html(
+                '<b><span id="footerTotal">' + remainingSale + '</span></b>'
+            );
+        }
     });
 
     // Array to track the ids of the details displayed rows
     var detailRows = [];
 
 
-    $('#example tbody').on('click', 'tr td.details-control', function () {
+    $('#example,#exampleGrid tbody').on('click', 'tr td.details-control,tr td.details-control-click', function () {
         var tr = $(this).closest('tr');
         var row = dt.row(tr);
         var idx = $.inArray(tr.attr('id'), detailRows);
@@ -87,8 +188,10 @@ $(document).ready(function () {
 });
 
 function format(d) {
-    return 'Full name: ' + d.first_name + ' ' + d.last_name + '<br>' +
-        'Salary: ' + d.salary + '<br>' +
-        'The child row can contain any data you wish, including links, images, inner tables etc.';
+    var order = d.OrderDetail[0] == undefined ? '&nbsp;&nbsp;&nbsp;&nbsp;   -' : d.OrderDetail[0];
+    var dispatch = d.OrderDetail[1] == undefined ? '&nbsp;&nbsp;&nbsp;&nbsp;    -' : d.OrderDetail[1];
+    return '<b>Full name:</b> ' + d.Name + ' <br>' +
+        '<b>Order:</b> ' + order + '.<br>' +
+        '<b>Dispatch:</b> ' + dispatch + ''
 }
 
