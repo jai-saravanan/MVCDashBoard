@@ -148,11 +148,11 @@ namespace MVCDashBoard.Controllers
 
             foreach (var item in outerData2ndGrid)
             {
-                var orderDetail = innerData2ndGrid?.Where(x => x.ProductName == item.ProductName)?.OrderByDescending(x => x.ProductName).ToList();
+                var orderDetail = innerData2ndGrid?.Where(x => x.ProductName == item.ProductName)?.Select(x => x.OrderDetail)?.OrderByDescending(x => x).ToList();
                 if (orderDetail != null || orderDetail.Count() > 0)
                 {
-                    item.InnerInfo = new List<PartyWisePurchaseInnerInfo>();
-                    item.InnerInfo.AddRange(orderDetail);
+                    item.OrderDetail = new List<string>();
+                    item.OrderDetail.AddRange(orderDetail);
                 }
 
             }

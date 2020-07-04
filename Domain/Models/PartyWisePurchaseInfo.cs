@@ -10,7 +10,7 @@ namespace Domain.Models
         public string TotalPurchase  { get; set; }
         public string RemainingPurchase { get; set; }
 
-        public List<PartyWisePurchaseInnerInfo> InnerInfo { get; set; }
+        public List<string> OrderDetail { get; set; }
     }
 
     public class PartyWisePurchaseInnerInfo

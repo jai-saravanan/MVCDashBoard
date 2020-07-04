@@ -580,12 +580,12 @@ namespace Persistance
             List<PartyWisePurchaseInnerInfo> result = new List<PartyWisePurchaseInnerInfo>();
             try
             {
-                OracleCommand command = new OracleCommand($"SELECT pmst.name, 'Received ' || LISTAGG(descr || '  [' || (nvl(qty, 0)), ' Kg],') WITHIN GROUP(ORDER BY pmst.pdate, pmst.name) " +
+                OracleCommand command = new OracleCommand($"SELECT pmst.name, '' || LISTAGG(descr || '  [' || (nvl(qty, 0)), ' Kg],') WITHIN GROUP(ORDER BY pmst.pdate, pmst.name) " +
                     $" FROM pmst, pdtl where pmst.unit_year = pdtl.unit_year and pdate between '{fromData.ToString("dd-MMM-yyyy")}' " +
                     $" and '{toDate.ToString("dd-MMM-yyyy")}' and pmst.inv = pdtl.inv and pdtl.unit_year = '{unitYear}' " +
                     $" and name = 'SAEED BROTHERS KARACHI' GROUP BY pmst.name " +
                     $" union all " +
-                    $" SELECT po_mst.name, 'Order ' || LISTAGG(descr || '  [' || qty, ' Kg],') WITHIN GROUP(ORDER BY po_mst.pdate, po_mst.name) " +
+                    $" SELECT po_mst.name, '' || LISTAGG(descr || '  [' || qty, ' Kg],') WITHIN GROUP(ORDER BY po_mst.pdate, po_mst.name) " +
                     $" FROM po_mst, po_dtl where po_mst.unit_year = po_dtl.unit_year " +
                     $" and po_mst.inv = po_dtl.inv and  pdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' " +
                     $" and po_dtl.unit_year = '{unitYear}' and name = 'SAEED BROTHERS KARACHI' GROUP BY po_mst.name order by name");
