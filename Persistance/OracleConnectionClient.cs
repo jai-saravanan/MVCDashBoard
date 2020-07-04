@@ -471,7 +471,8 @@ namespace Persistance
             try
             {
                 OracleCommand command = new OracleCommand($"SELECT account_no,name,gdate,particular,credit " +
-                    $" FROM ledger where gdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' and ledger.unit_year = '{unitYear}' " +
+                    $" FROM ledger where gdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' " +
+                    $" and ledger.unit_year = '{unitYear}' " +
                     $" and vtype = 'CR' order by account_no, gdate");
                 command.Connection = oracleConnection;
                 oracleConnection.Open();
@@ -486,6 +487,155 @@ namespace Persistance
                         GDate = Convert.ToString(reader[2]),
                         Particular = Convert.ToString(reader[3]),
                         Credit = Convert.ToString(reader[4]),
+                    });
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return result;
+        }
+
+        public List<ExpencesOutterInfo> ExpencesOutterGrid(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            List<ExpencesOutterInfo> result = new List<ExpencesOutterInfo>();
+            try
+            {
+                OracleCommand command = new OracleCommand($"select pcode,name,sum(nvl(expense_target,0)) Expense_Target," +
+                    $" sum(nvl(total_expense,0)) Total_Expense, sum(nvl(expense_target,0))-sum(nvl(total_expense,0)) Remaining_Expense " +
+                    $" from dashboard_view where pdate between '{fromData.ToString("dd-MMM-yyyy")}' " +
+                    $" and '{toDate.ToString("dd-MMM-yyyy")}' and unit_year = '{unitYear}' " +
+                    $" and substr(pcode, 1, 4) <> '1007' group by pcode, name");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.Add(new ExpencesOutterInfo()
+                    {
+                        ProductCode = Convert.ToString(reader[0]),
+                        ProductName = Convert.ToString(reader[1]),
+                        ExpenceTarget = Convert.ToString(reader[2]),
+                        TotalExpence = Convert.ToString(reader[3]),
+                        RemainingExpence = Convert.ToString(reader[4]),
+                    });
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return result;
+        }
+
+        public List<ExpencesInnerInfo> ExpencesInnerGrid(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            List<ExpencesInnerInfo> result = new List<ExpencesInnerInfo>();
+            try
+            {
+                OracleCommand command = new OracleCommand($"SELECT account_no,name,gdate,particular,credit " +
+                    $" FROM ledger where gdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' " +
+                    $" and ledger.unit_year = '{unitYear}' and vtype IN('EX', 'CP') " +
+                    $" order by account_no, gdate");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.Add(new ExpencesInnerInfo()
+                    {
+                        AccountNumber = Convert.ToString(reader[0]),
+                        Name = Convert.ToString(reader[1]),
+                        GDate = Convert.ToString(reader[2]),
+                        Particular = Convert.ToString(reader[3]),
+                        Credit = Convert.ToString(reader[4]),
+                    });
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return result;
+        }
+
+
+        public List<PartyWisePurchaseInnerInfo> PartyWisePurchaseInnerGrid(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            List<PartyWisePurchaseInnerInfo> result = new List<PartyWisePurchaseInnerInfo>();
+            try
+            {
+                OracleCommand command = new OracleCommand($"SELECT pmst.name, 'Received ' || LISTAGG(descr || '  [' || (nvl(qty, 0)), ' Kg],') WITHIN GROUP(ORDER BY pmst.pdate, pmst.name) " +
+                    $" FROM pmst, pdtl where pmst.unit_year = pdtl.unit_year and pdate between '{fromData.ToString("dd-MMM-yyyy")}' " +
+                    $" and '{toDate.ToString("dd-MMM-yyyy")}' and pmst.inv = pdtl.inv and pdtl.unit_year = '{unitYear}' " +
+                    $" and name = 'SAEED BROTHERS KARACHI' GROUP BY pmst.name " +
+                    $" union all " +
+                    $" SELECT po_mst.name, 'Order ' || LISTAGG(descr || '  [' || qty, ' Kg],') WITHIN GROUP(ORDER BY po_mst.pdate, po_mst.name) " +
+                    $" FROM po_mst, po_dtl where po_mst.unit_year = po_dtl.unit_year " +
+                    $" and po_mst.inv = po_dtl.inv and  pdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' " +
+                    $" and po_dtl.unit_year = '{unitYear}' and name = 'SAEED BROTHERS KARACHI' GROUP BY po_mst.name order by name");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.Add(new PartyWisePurchaseInnerInfo()
+                    {
+                        ProductName = Convert.ToString(reader[0]),
+                        OrderDetail = Convert.ToString(reader[1])
+                    });
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return result;
+        }
+
+        public List<PartyWisePurchaseOutterInfo> PartyWisePurchaseOuterGrid(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            List<PartyWisePurchaseOutterInfo> result = new List<PartyWisePurchaseOutterInfo>();
+            try
+            {
+                OracleCommand command = new OracleCommand($"select pcode,name,sum(nvl(total_purchase_order,0)) total_purchase_order," +
+                    $" sum(nvl(total_purchase,0)) total_purchase,(sum(nvl(total_purchase_order,0)) -sum(nvl(total_purchase,0))) remaining_purchase " +
+                    $" from dashboard_view where dashboard_view.pdate " +
+                    $" between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' and substr(dashboard_view.pcode, 1, 4) in ('2001', '2002') " +
+                    $" and dashboard_view.unit_year = '{unitYear}' group by pcode, name");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.Add(new PartyWisePurchaseOutterInfo()
+                    {
+                        ProductCode = Convert.ToString(reader[0]),
+                        ProductName = Convert.ToString(reader[1]),
+                        TotalPurchaseOrder = Convert.ToString(reader[2]),
+                        TotalPurchase = Convert.ToString(reader[3]),
+                        RemainingPurchase = Convert.ToString(reader[4]),
                     });
                 }
                 reader.Close();

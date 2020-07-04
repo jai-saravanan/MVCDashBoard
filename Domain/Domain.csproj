@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\ExpencesGrid.cs" />
+    <Compile Include="Models\PartyWisePurchaseInfo.cs" />
     <Compile Include="Models\PartyWiseRecoveryInfo.cs" />
     <Compile Include="Models\PartyWiseSaleOuterInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -114,5 +114,50 @@ namespace MVCDashBoard.Controllers
             return Json(new { data = outerData2ndGrid.OrderBy(x => x.ProductName) }, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult GetDashBoardExpensesData()
+        {
+            _sessionInfo = Session["UserInfo"] as SessionInfo;
+            var fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-5);
+            var toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1, 1).AddMonths(-5).AddDays(-1);
+
+            var outerData2ndGrid = _dashBoardService.ExpencesOutterGrid(fromDate, toDate, _sessionInfo.UnitYear);
+            var innerData2ndGrid = _dashBoardService.ExpencesInnerGrid(fromDate, toDate, _sessionInfo.UnitYear);
+
+            foreach (var item in outerData2ndGrid)
+            {
+                var orderDetail = innerData2ndGrid?.Where(x => x.Name == item.ProductName)?.OrderByDescending(x => x.GDate).ToList();
+                if (orderDetail != null || orderDetail.Count() > 0)
+                {
+                    item.InnerInfo = new List<ExpencesInnerInfo>();
+                    item.InnerInfo.AddRange(orderDetail);
+                }
+
+            }
+            return Json(new { data = outerData2ndGrid.OrderBy(x => x.ProductName) }, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetDashBoardPartyWisePurchaseData()
+        {
+            _sessionInfo = Session["UserInfo"] as SessionInfo;
+            var fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-5);
+            var toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1, 1).AddMonths(-5).AddDays(-1);
+
+            // first grid
+            var outerData2ndGrid = _dashBoardService.PartyWisePurchaseOuterGrid(fromDate, toDate, _sessionInfo.UnitYear);
+            var innerData2ndGrid = _dashBoardService.PartyWisePurchaseInnerGrid(fromDate, toDate, _sessionInfo.UnitYear);
+
+            foreach (var item in outerData2ndGrid)
+            {
+                var orderDetail = innerData2ndGrid?.Where(x => x.ProductName == item.ProductName)?.OrderByDescending(x => x.ProductName).ToList();
+                if (orderDetail != null || orderDetail.Count() > 0)
+                {
+                    item.InnerInfo = new List<PartyWisePurchaseInnerInfo>();
+                    item.InnerInfo.AddRange(orderDetail);
+                }
+
+            }
+            return Json(new { data = outerData2ndGrid.OrderBy(x => x.ProductName) }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

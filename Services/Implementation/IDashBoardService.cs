@@ -31,5 +31,9 @@ namespace MVCDashBoard.Services.Implementation
         List<PartyWiseRecoveryOutterInfo> PartyWiseRecoveryOutterGrid(DateTime fromData, DateTime toDate, string unitYear);
 
         List<PartyWiseRecoveryInnerInfo> PartyWiseRecoveryInnerGrid(DateTime fromData, DateTime toDate, string unitYear);
+        List<ExpencesOutterInfo> ExpencesOutterGrid(DateTime fromData, DateTime toDate, string unitYear);
+        List<ExpencesInnerInfo> ExpencesInnerGrid(DateTime fromData, DateTime toDate, string unitYear);
+        List<PartyWisePurchaseInnerInfo> PartyWisePurchaseInnerGrid(DateTime fromData, DateTime toDate, string unitYear);
+        List<PartyWisePurchaseOutterInfo> PartyWisePurchaseOuterGrid(DateTime fromData, DateTime toDate, string unitYear);
     }
 }

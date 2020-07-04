@@ -79,5 +79,25 @@ namespace MVCDashBoard.Services.Interface
         {
             return _oracleConnectionClient.PartyWiseRecoveryInnerGrid(fromData, toDate, unitYear);
         }
+
+        public List<ExpencesOutterInfo> ExpencesOutterGrid(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            return _oracleConnectionClient.ExpencesOutterGrid(fromData, toDate, unitYear);
+        }
+
+        public List<ExpencesInnerInfo> ExpencesInnerGrid(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            return _oracleConnectionClient.ExpencesInnerGrid(fromData, toDate, unitYear);
+        }
+
+        public List<PartyWisePurchaseInnerInfo> PartyWisePurchaseInnerGrid(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            return _oracleConnectionClient.PartyWisePurchaseInnerGrid(fromData, toDate, unitYear);
+        }
+
+        public List<PartyWisePurchaseOutterInfo> PartyWisePurchaseOuterGrid(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            return _oracleConnectionClient.PartyWisePurchaseOuterGrid(fromData, toDate, unitYear);
+        }
     }
 }
