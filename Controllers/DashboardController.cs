@@ -1,4 +1,5 @@
-﻿using MVCDashBoard.Models;
+﻿using Domain.Models;
+using MVCDashBoard.Models;
 using MVCDashBoard.Services.Implementation;
 using System;
 using System.Collections.Generic;
@@ -69,12 +70,12 @@ namespace MVCDashBoard.Controllers
         public JsonResult GetDashBoardPartyWiseSalesData()
         {
             _sessionInfo = Session["UserInfo"] as SessionInfo;
-            var fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-4);
-            var toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1, 1).AddMonths(-4);
+            var fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-5);
+            var toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1, 1).AddMonths(-5).AddDays(-1);
 
-
+            // first grid
             var outerData = _dashBoardService.PartyWiseSaleOuterGrid(fromDate, toDate, _sessionInfo.UnitYear);
-            var innerData = _dashBoardService.PurchaseWiseSaleInnerGrid(fromDate, toDate, _sessionInfo.UnitYear);
+            var innerData = _dashBoardService.PartyWiseSaleInnerGrid(fromDate, toDate, _sessionInfo.UnitYear);
 
             foreach (var item in outerData)
             {
@@ -88,6 +89,29 @@ namespace MVCDashBoard.Controllers
             }
 
             return Json(new { data = outerData.OrderBy(x => x.Name) }, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetDashBoardPartyWiseRecoveryData()
+        {
+            _sessionInfo = Session["UserInfo"] as SessionInfo;
+            var fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-5);
+            var toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1, 1).AddMonths(-5).AddDays(-1);
+
+            // first grid
+            var outerData2ndGrid = _dashBoardService.PartyWiseRecoveryOutterGrid(fromDate, toDate, _sessionInfo.UnitYear);
+            var innerData2ndGrid = _dashBoardService.PartyWiseRecoveryInnerGrid(fromDate, toDate, _sessionInfo.UnitYear);
+
+            foreach (var item in outerData2ndGrid)
+            {
+                var orderDetail = innerData2ndGrid?.Where(x => x.Name == item.ProductName)?.OrderByDescending(x => x.GDate).ToList();
+                if (orderDetail != null || orderDetail.Count() > 0)
+                {
+                    item.InnerInfo = new List<PartyWiseRecoveryInnerInfo>();
+                    item.InnerInfo.AddRange(orderDetail);
+                }
+
+            }
+            return Json(new { data = outerData2ndGrid.OrderBy(x => x.ProductName) }, JsonRequestBehavior.AllowGet);
         }
 
     }

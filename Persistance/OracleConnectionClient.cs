@@ -338,7 +338,8 @@ namespace Persistance
             return 0;
         }
 
-        public List<PartyWiseSaleInnerInfo> PurchaseWiseSaleInnerGrid(DateTime fromData, DateTime toDate, string unitYear)
+
+        public List<PartyWiseSaleInnerInfo> PartyWiseSaleInnerGrid(DateTime fromData, DateTime toDate, string unitYear)
         {
             List<PartyWiseSaleInnerInfo> result = new List<PartyWiseSaleInnerInfo>();
             try
@@ -412,6 +413,79 @@ namespace Persistance
                         TotalOrder = Convert.ToString(reader[3]),
                         TotalSale = Convert.ToString(reader[4]),
                         RemainingSale = Convert.ToString(reader[5])
+                    });
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return result;
+        }
+
+
+
+        public List<PartyWiseRecoveryOutterInfo> PartyWiseRecoveryOutterGrid(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            List<PartyWiseRecoveryOutterInfo> result = new List<PartyWiseRecoveryOutterInfo>();
+            try
+            {
+                OracleCommand command = new OracleCommand($"select pcode,name,sum(nvl(total_recovery,0)) " +
+                    $" Recovery_Target,sum(nvl(payment_received,0)) Payment_Received, sum(nvl(total_recovery,0))-sum(nvl(payment_received,0)) Remaining_Recovery " +
+                    $" from dashboard_view where pdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' " +
+                    $" and unit_year = '{unitYear}' and substr(pcode, 1, 4) = '1007' group by pcode, name");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.Add(new PartyWiseRecoveryOutterInfo()
+                    {
+                        ProductCode = Convert.ToString(reader[0]),
+                        ProductName = Convert.ToString(reader[1]),
+                        RecoveryTarget = Convert.ToString(reader[2]),
+                        PaymentReceived = Convert.ToString(reader[3]),
+                        RemainingRecovery = Convert.ToString(reader[4]),
+                    });
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return result;
+        }
+
+        public List<PartyWiseRecoveryInnerInfo> PartyWiseRecoveryInnerGrid(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            List<PartyWiseRecoveryInnerInfo> result = new List<PartyWiseRecoveryInnerInfo>();
+            try
+            {
+                OracleCommand command = new OracleCommand($"SELECT account_no,name,gdate,particular,credit " +
+                    $" FROM ledger where gdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' and ledger.unit_year = '{unitYear}' " +
+                    $" and vtype = 'CR' order by account_no, gdate");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.Add(new PartyWiseRecoveryInnerInfo()
+                    {
+                        AccountNumber = Convert.ToString(reader[0]),
+                        Name = Convert.ToString(reader[1]),
+                        GDate = Convert.ToString(reader[2]),
+                        Particular = Convert.ToString(reader[3]),
+                        Credit = Convert.ToString(reader[4]),
                     });
                 }
                 reader.Close();

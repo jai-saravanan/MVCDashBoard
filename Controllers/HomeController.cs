@@ -13,6 +13,25 @@ namespace MVCDashBoard.Controllers
             return View();
         }
 
+        public JsonResult GetTotalAmt()
+        {
+            int[] vars = new int[5];
+
+            vars[0] = 12;
+
+            vars[1] = 4;
+
+
+            int totalAmt = 0;
+            for (int i = 0; i < vars.Length; i++)
+            {
+
+                totalAmt = totalAmt + vars[i];
+            }
+
+            return Json(totalAmt, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
