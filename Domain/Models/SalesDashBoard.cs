@@ -4,6 +4,8 @@ namespace Domain.Models
 {
     public class SalesDashBoard
     {
+        public string AccountNumber { get; set; }
+
         public string Name { get; set; }
 
         public string TotalSale { get; set; }

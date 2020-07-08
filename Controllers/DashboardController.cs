@@ -29,7 +29,8 @@ namespace MVCDashBoard.Controllers
 
         public ActionResult SalesDashBoard()
         {
-            return View();
+            _sessionInfo = Session["UserInfo"] as SessionInfo;
+            return View(model: _sessionInfo.UnitYear);
         }
 
         public JsonResult GetDashBoardData()
@@ -164,12 +165,9 @@ namespace MVCDashBoard.Controllers
             return Json(new { data = outerData2ndGrid.OrderBy(x => x.ProductName) }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetSalesDashBoardPartyWiseSale()
+        public JsonResult GetSalesDashBoardPartyWiseSale(DateTime fromDate, DateTime toDate)
         {
             _sessionInfo = Session["UserInfo"] as SessionInfo;
-            var fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-5);
-            var toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1, 1).AddMonths(-5).AddDays(-1);
-
             // first grid
             var outerData2ndGrid = _dashBoardService.SalesPageFirstGrid(fromDate, toDate, _sessionInfo.UnitYear);
             var innerData2ndGrid = _dashBoardService.GetSalesGridOpeningBalance(fromDate, toDate, _sessionInfo.UnitYear);
@@ -182,4 +180,6 @@ namespace MVCDashBoard.Controllers
         }
 
     }
+
+
 }

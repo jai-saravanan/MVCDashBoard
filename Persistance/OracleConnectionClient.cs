@@ -652,11 +652,11 @@ namespace Persistance
             List<SalesDashBoard> result = new List<SalesDashBoard>();
             try
             {
-                OracleCommand command = new OracleCommand($"select distinct name,sum(nvl(total_sale,0)) Total_Sale," +
+                OracleCommand command = new OracleCommand($"select distinct  name,sum(nvl(total_sale,0)) Total_Sale," +
                     $"  sum(nvl(Payment_Received,0)) Payment_Received,sum(nvl(salary,0)) Salary,sum(nvl(zonal_expense,0)) Zonal_Expense," +
                     $"  (sum(nvl(Payment_Received,0))+sum(nvl(salary,0)) +sum(nvl(zonal_expense,0))) Total_Recovery," +
-                    $"  sum(nvl(claim,0)) Claim,sum(nvl(Transfer,0)) Transfer from primary_sheet  where unit_year = '{unitYear}' " +
-                    $"  and gdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' group by name");
+                    $"  sum(nvl(claim,0)) Claim,sum(nvl(Transfer,0)) Transfer,account_no from primary_sheet  where unit_year = '{unitYear}' " +
+                    $"  and gdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' group by account_no,name");
                 command.Connection = oracleConnection;
                 oracleConnection.Open();
 
@@ -673,6 +673,7 @@ namespace Persistance
                         TotalRecovery = Convert.ToString(reader[5]),
                         CLAI = Convert.ToString(reader[6]),
                         Transfer = Convert.ToString(reader[7]),
+                        AccountNumber= Convert.ToString(reader[8])
                     });
                 }
                 reader.Close();
@@ -720,7 +721,7 @@ namespace Persistance
             return result;
         }
 
-
+        
         private decimal GetIntValue(string number)
         {
             decimal value = 0;

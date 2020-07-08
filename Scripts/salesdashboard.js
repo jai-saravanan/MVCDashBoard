@@ -1,5 +1,10 @@
-﻿
+﻿var salesTable;
 $(document).ready(function () {
+    var date = new Date();
+    var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    $("#fromDate").datepicker().datepicker("setDate", firstDay);
+    $("#toDate").datepicker().datepicker("setDate", lastDay);;
     $.ajax({
         url: "/DashBoard/GetDashBoardData", success: function (result) {
             $('#totalTarget').text(result.totalSaleTarget);
@@ -30,6 +35,13 @@ $(document).ready(function () {
 
 function salesPartyWiseGrid() {
 
+    //The datatable needed to be destroyed if existed.
+    if (salesTable !== null) {
+        $('#salesPartyWiseGrid').DataTable().destroy();
+        salesTable = null;
+        $('#salesPartyWiseGrid').empty();
+    }  
+
     var buttonCommon = {
         exportOptions: {
             format: {
@@ -40,8 +52,8 @@ function salesPartyWiseGrid() {
             }
         }
     };
-    var dt = $('#salesPartyWiseGrid').DataTable({
-        ajax: "/dashboard/GetSalesDashBoardPartyWiseSale",
+    salesTable = $('#salesPartyWiseGrid').DataTable({
+        ajax: "/dashboard/GetSalesDashBoardPartyWiseSale?fromDate=" + $("#fromDate").val() + "&toDate=" + $("#toDate").val(),
         columns: [
 
             { "data": "Name" },
@@ -52,13 +64,15 @@ function salesPartyWiseGrid() {
             { "data": "ZonalExpense" },
             { "data": "TotalRecovery" },
             { "data": "CLAI" },
-            { "data": "Transfer" }
+            { "data": "Transfer" },
+            { "data": "AccountNumber" }
         ],
         "columnDefs": [
             {
                 "targets": [0],
                 "render": function (data, type, full, meta) {
-                    return '<a href="' + data + '">' + data + '</a>';
+                    var url = encodeURI('http://124.109.62.126:8889/reports/rwservlet?&report=D:\\NEWACC\\REP\\LEDGERs.Rdf&userid=zahid/pak@XE&destype=cache&desformat=pdf&ENTER_ACCOUNT_NO=' + full.AccountNumber + '&from_date=01-JUN-20&enter_unit=' + $('#unitYear').val() + '&to_date=08-JUL-20&paramform=no');
+                    return '<a href="' + url + '">' + data + '</a>';
                 }
             },
             {
@@ -84,8 +98,26 @@ function salesPartyWiseGrid() {
             {
                 "targets": [6],
                 "className": "text-right",
+            },
+            {
+                "targets": [6],
+                "className": "text-right",
+            },
+            {
+                "targets": [7],
+                "className": "text-right",
+            },
+            {
+                "targets": [8],
+                "className": "text-right",
+            },
+            {
+                "targets": [9],
+                "visible": false,
+                "searchable": false,
             }
         ],
+        "bDestroy": true,
         "order": [[2, 'asc']],
         dom: 'Bfrtip',
         buttons: [
@@ -391,3 +423,7 @@ function partyWiseRecoveryInner(d) {
     return content;
 }
 
+function reloadGrid() {
+    debugger
+    salesPartyWiseGrid();
+}
