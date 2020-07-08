@@ -580,15 +580,9 @@ namespace Persistance
             List<PartyWisePurchaseInnerInfo> result = new List<PartyWisePurchaseInnerInfo>();
             try
             {
-                OracleCommand command = new OracleCommand($"SELECT pmst.name, '' || LISTAGG(descr || '  [' || (nvl(qty, 0)), ' Kg],') WITHIN GROUP(ORDER BY pmst.pdate, pmst.name) " +
-                    $" FROM pmst, pdtl where pmst.unit_year = pdtl.unit_year and pdate between '{fromData.ToString("dd-MMM-yyyy")}' " +
-                    $" and '{toDate.ToString("dd-MMM-yyyy")}' and pmst.inv = pdtl.inv and pdtl.unit_year = '{unitYear}' " +
-                    $" and name = 'SAEED BROTHERS KARACHI' GROUP BY pmst.name " +
-                    $" union all " +
-                    $" SELECT po_mst.name, '' || LISTAGG(descr || '  [' || qty, ' Kg],') WITHIN GROUP(ORDER BY po_mst.pdate, po_mst.name) " +
-                    $" FROM po_mst, po_dtl where po_mst.unit_year = po_dtl.unit_year " +
-                    $" and po_mst.inv = po_dtl.inv and  pdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' " +
-                    $" and po_dtl.unit_year = '{unitYear}' and name = 'SAEED BROTHERS KARACHI' GROUP BY po_mst.name order by name");
+                OracleCommand command = new OracleCommand($"select name,product_name,rate,sum(nvl(orders,0)) orders," +
+                    $" sum(nvl(received,0)) received from purchase_inner " +
+                    $" group by name, product_name, rate order by name");
                 command.Connection = oracleConnection;
                 oracleConnection.Open();
 
@@ -597,8 +591,11 @@ namespace Persistance
                 {
                     result.Add(new PartyWisePurchaseInnerInfo()
                     {
-                        ProductName = Convert.ToString(reader[0]),
-                        OrderDetail = Convert.ToString(reader[1])
+                        Name = Convert.ToString(reader[0]),
+                        ProductName = Convert.ToString(reader[1]),
+                        Rate = Convert.ToString(reader[2]),
+                        Orders = Convert.ToString(reader[3]),
+                        Received = Convert.ToString(reader[4])
                     });
                 }
                 reader.Close();
@@ -636,6 +633,79 @@ namespace Persistance
                         TotalPurchaseOrder = Convert.ToString(reader[2]),
                         TotalPurchase = Convert.ToString(reader[3]),
                         RemainingPurchase = Convert.ToString(reader[4]),
+                    });
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return result;
+        }
+
+        public List<SalesDashBoard> SalesPageFirstGrid(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            List<SalesDashBoard> result = new List<SalesDashBoard>();
+            try
+            {
+                OracleCommand command = new OracleCommand($"select distinct name,sum(nvl(total_sale,0)) Total_Sale," +
+                    $"  sum(nvl(Payment_Received,0)) Payment_Received,sum(nvl(salary,0)) Salary,sum(nvl(zonal_expense,0)) Zonal_Expense," +
+                    $"  (sum(nvl(Payment_Received,0))+sum(nvl(salary,0)) +sum(nvl(zonal_expense,0))) Total_Recovery," +
+                    $"  sum(nvl(claim,0)) Claim,sum(nvl(Transfer,0)) Transfer from primary_sheet  where unit_year = '{unitYear}' " +
+                    $"  and gdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' group by name");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.Add(new SalesDashBoard()
+                    {
+                        Name = Convert.ToString(reader[0]),
+                        TotalSale = Convert.ToString(reader[1]),
+                        PaymentReceived = Convert.ToString(reader[2]),
+                        Salary = Convert.ToString(reader[3]),
+                        ZonalExpense = Convert.ToString(reader[4]),
+                        TotalRecovery = Convert.ToString(reader[5]),
+                        CLAI = Convert.ToString(reader[6]),
+                        Transfer = Convert.ToString(reader[7]),
+                    });
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                oracleConnection.Close();
+            }
+            return result;
+        }
+
+        public List<OpeningBalanceData> GetSalesGridOpeningBalance(DateTime fromData, DateTime toDate, string unitYear)
+        {
+            List<OpeningBalanceData> result = new List<OpeningBalanceData>();
+            try
+            {
+                OracleCommand command = new OracleCommand($"select account_no,name,unit_year, sum(nvl(debit,0))-sum(nvl(credit,0)) Opening_Balance " +
+                    $"from trialv1 where unit_year = '{unitYear }' and gdate < '{fromData.ToString("dd-MMM-yyyy")}' group by account_no, name, unit_year");
+                command.Connection = oracleConnection;
+                oracleConnection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.Add(new OpeningBalanceData()
+                    {
+                        AccountNumber = Convert.ToString(reader[0]),
+                        Name = Convert.ToString(reader[1]),
+                        Unit = Convert.ToString(reader[2]),
+                        OpeningBalance = GetIntValue(Convert.ToString(reader[3])),
                     });
                 }
                 reader.Close();

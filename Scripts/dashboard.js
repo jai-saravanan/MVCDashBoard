@@ -688,11 +688,14 @@ function format(d) {
 
 function formatPurchase(d) {
     debugger
-    var order = d.OrderDetail[0] == undefined ? '&nbsp;&nbsp;&nbsp;&nbsp;   -' : d.OrderDetail[0];
-    var dispatch = d.OrderDetail[1] == undefined ? '&nbsp;&nbsp;&nbsp;&nbsp;    -' : d.OrderDetail[1];
-    return '<b>Full name:</b> ' + d.ProductName + ' <br>' +
-        '<b>Received:</b> ' + order + '.<br>' +
-        '<b>Order:</b> ' + dispatch + ''
+    console.log(JSON.stringify(d.OrderDetail));
+    var content = '<table id="styleforinner"><tr><th>Product Name</th><th>Rate</th><th>Orders</th><th>Received</th></tr>';
+    for (var i = 0; i < d.OrderDetail.length; i++) {
+        content = content + '<tr><td>' + d.OrderDetail[i].ProductName + ' </td><td>' + d.OrderDetail[i].Rate + ' </td><td>' + d.OrderDetail[i].Orders + ' </td><td>' + d.OrderDetail[i].Received + ' </td></tr>'
+
+    }
+    content = content + '</table>';
+    return content; 
 }
 
 function partyWiseRecoveryInner(d) {

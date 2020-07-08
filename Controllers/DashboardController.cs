@@ -27,6 +27,11 @@ namespace MVCDashBoard.Controllers
             return View();
         }
 
+        public ActionResult SalesDashBoard()
+        {
+            return View();
+        }
+
         public JsonResult GetDashBoardData()
         {
             _sessionInfo = Session["UserInfo"] as SessionInfo;
@@ -148,15 +153,32 @@ namespace MVCDashBoard.Controllers
 
             foreach (var item in outerData2ndGrid)
             {
-                var orderDetail = innerData2ndGrid?.Where(x => x.ProductName == item.ProductName)?.Select(x => x.OrderDetail)?.OrderByDescending(x => x).ToList();
+                var orderDetail = innerData2ndGrid?.Where(x => x.Name == item.ProductName)?.OrderBy(x => x.ProductName).ToList();
                 if (orderDetail != null || orderDetail.Count() > 0)
                 {
-                    item.OrderDetail = new List<string>();
+                    item.OrderDetail = new List<PartyWisePurchaseInnerInfo>();
                     item.OrderDetail.AddRange(orderDetail);
                 }
 
             }
             return Json(new { data = outerData2ndGrid.OrderBy(x => x.ProductName) }, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetSalesDashBoardPartyWiseSale()
+        {
+            _sessionInfo = Session["UserInfo"] as SessionInfo;
+            var fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-5);
+            var toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1, 1).AddMonths(-5).AddDays(-1);
+
+            // first grid
+            var outerData2ndGrid = _dashBoardService.SalesPageFirstGrid(fromDate, toDate, _sessionInfo.UnitYear);
+            var innerData2ndGrid = _dashBoardService.GetSalesGridOpeningBalance(fromDate, toDate, _sessionInfo.UnitYear);
+
+            foreach (var item in outerData2ndGrid)
+            {
+                item.OpeningBalance = (decimal.Round(innerData2ndGrid?.Where(x => x.Name == item.Name)?.Sum(x => x.OpeningBalance) ?? 0)).ToString();
+            }
+            return Json(new { data = outerData2ndGrid.OrderBy(x => x.Name) }, JsonRequestBehavior.AllowGet);
         }
 
     }

@@ -10,13 +10,17 @@ namespace Domain.Models
         public string TotalPurchase  { get; set; }
         public string RemainingPurchase { get; set; }
 
-        public List<string> OrderDetail { get; set; }
+        public List<PartyWisePurchaseInnerInfo> OrderDetail { get; set; }
     }
-
+            
     public class PartyWisePurchaseInnerInfo
     {
+        public string Name { get; set; }    
+
         public string ProductName { get; set; }
 
-        public string OrderDetail { get; set; }
+        public string Rate { get; set; }
+        public string Orders { get; set; }
+        public string Received { get; set; }
     }
 }

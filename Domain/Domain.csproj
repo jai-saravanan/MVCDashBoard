@@ -45,6 +45,7 @@
     <Compile Include="Models\PartyWisePurchaseInfo.cs" />
     <Compile Include="Models\PartyWiseRecoveryInfo.cs" />
     <Compile Include="Models\PartyWiseSaleOuterInfo.cs" />
+    <Compile Include="Models\SalesDashBoard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\UserLoginViewModel.cs" />
   </ItemGroup>
