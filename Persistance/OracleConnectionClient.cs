@@ -9,7 +9,7 @@ namespace Persistance
 {
     public class OracleConnectionClient
     {
-        private OracleConnection oracleConnection = new OracleConnection(ConfigurationManager.AppSettings["DbContext"]);
+        internal OracleConnection oracleConnection = new OracleConnection(ConfigurationManager.AppSettings["DbContext"]);
         public OracleConnectionClient()
         {
 
@@ -647,82 +647,8 @@ namespace Persistance
             return result;
         }
 
-        public List<SalesDashBoard> SalesPageFirstGrid(DateTime fromData, DateTime toDate, string unitYear)
-        {
-            List<SalesDashBoard> result = new List<SalesDashBoard>();
-            try
-            {
-                OracleCommand command = new OracleCommand($"select distinct  name,sum(nvl(total_sale,0)) Total_Sale," +
-                    $"  sum(nvl(Payment_Received,0)) Payment_Received,sum(nvl(salary,0)) Salary,sum(nvl(zonal_expense,0)) Zonal_Expense," +
-                    $"  (sum(nvl(Payment_Received,0))+sum(nvl(salary,0)) +sum(nvl(zonal_expense,0))) Total_Recovery," +
-                    $"  sum(nvl(claim,0)) Claim,sum(nvl(Transfer,0)) Transfer,account_no from primary_sheet  where unit_year = '{unitYear}' " +
-                    $"  and gdate between '{fromData.ToString("dd-MMM-yyyy")}' and '{toDate.ToString("dd-MMM-yyyy")}' group by account_no,name");
-                command.Connection = oracleConnection;
-                oracleConnection.Open();
-
-                var reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    result.Add(new SalesDashBoard()
-                    {
-                        Name = Convert.ToString(reader[0]),
-                        TotalSale = Convert.ToString(reader[1]),
-                        PaymentReceived = Convert.ToString(reader[2]),
-                        Salary = Convert.ToString(reader[3]),
-                        ZonalExpense = Convert.ToString(reader[4]),
-                        TotalRecovery = Convert.ToString(reader[5]),
-                        CLAI = Convert.ToString(reader[6]),
-                        Transfer = Convert.ToString(reader[7]),
-                        AccountNumber= Convert.ToString(reader[8])
-                    });
-                }
-                reader.Close();
-            }
-            catch (Exception ex)
-            {
-            }
-            finally
-            {
-                oracleConnection.Close();
-            }
-            return result;
-        }
-
-        public List<OpeningBalanceData> GetSalesGridOpeningBalance(DateTime fromData, DateTime toDate, string unitYear)
-        {
-            List<OpeningBalanceData> result = new List<OpeningBalanceData>();
-            try
-            {
-                OracleCommand command = new OracleCommand($"select account_no,name,unit_year, sum(nvl(debit,0))-sum(nvl(credit,0)) Opening_Balance " +
-                    $"from trialv1 where unit_year = '{unitYear }' and gdate < '{fromData.ToString("dd-MMM-yyyy")}' group by account_no, name, unit_year");
-                command.Connection = oracleConnection;
-                oracleConnection.Open();
-
-                var reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    result.Add(new OpeningBalanceData()
-                    {
-                        AccountNumber = Convert.ToString(reader[0]),
-                        Name = Convert.ToString(reader[1]),
-                        Unit = Convert.ToString(reader[2]),
-                        OpeningBalance = GetIntValue(Convert.ToString(reader[3])),
-                    });
-                }
-                reader.Close();
-            }
-            catch (Exception ex)
-            {
-            }
-            finally
-            {
-                oracleConnection.Close();
-            }
-            return result;
-        }
-
         
-        private decimal GetIntValue(string number)
+        internal decimal GetIntValue(string number)
         {
             decimal value = 0;
             decimal.TryParse(number, out value);

@@ -36,8 +36,5 @@ namespace MVCDashBoard.Services.Implementation
         List<PartyWisePurchaseInnerInfo> PartyWisePurchaseInnerGrid(DateTime fromData, DateTime toDate, string unitYear);
         List<PartyWisePurchaseOutterInfo> PartyWisePurchaseOuterGrid(DateTime fromData, DateTime toDate, string unitYear);
 
-        List<SalesDashBoard> SalesPageFirstGrid(DateTime fromData, DateTime toDate, string unitYear);
-
-        List<OpeningBalanceData> GetSalesGridOpeningBalance(DateTime fromData, DateTime toDate, string unitYear);
     }
 }

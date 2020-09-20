@@ -37,6 +37,7 @@ namespace MVCDashBoard
             // Now grab your connection string and wire up your db context
             builder.RegisterType<AccountService>().As<IAccountService>();
             builder.RegisterType<DashBoardService>().As<IDashBoardService>();
+            builder.RegisterType<SalesDashboardService>().As<ISalesDashboardService>();
             
 
             // You can register any other dependencies here

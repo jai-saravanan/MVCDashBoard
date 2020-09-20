@@ -100,14 +100,6 @@ namespace MVCDashBoard.Services.Interface
             return _oracleConnectionClient.PartyWisePurchaseOuterGrid(fromData, toDate, unitYear);
         }
 
-        public List<SalesDashBoard> SalesPageFirstGrid(DateTime fromData, DateTime toDate, string unitYear)
-        {
-            return _oracleConnectionClient.SalesPageFirstGrid(fromData, toDate, unitYear);
-        }
-
-        public List<OpeningBalanceData> GetSalesGridOpeningBalance(DateTime fromData, DateTime toDate, string unitYear)
-        {
-            return _oracleConnectionClient.GetSalesGridOpeningBalance(fromData, toDate, unitYear);
-        }
+        
     }
 }
