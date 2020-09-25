@@ -60,7 +60,12 @@ function salesPartyWiseGrid() {
             {
                 "targets": [0],
                 "render": function (data, type, full, meta) {
-                    var url = encodeURI('http://124.109.62.126:8889/reports/rwservlet?&report=D:\\NEWACC\\REP\\LEDGERs.Rdf&userid=zahid/pak@XE&destype=cache&desformat=pdf&ENTER_ACCOUNT_NO=' + full.AccountNumber + '&from_date=01-JUN-20&enter_unit=' + $('#unitYear').val() + '&to_date=08-JUL-20&paramform=no');
+
+                    var tempFromDate = $('#fromDate').val().split('/');
+                    var fromDate = tempFromDate[1] + '/' + tempFromDate[0] + '/' + tempFromDate[2];
+                    var tempToDate = $('#toDate').val().split('/');
+                    var toDate = tempToDate[1] + '/' + tempToDate[0] + '/' + tempToDate[2];
+                    var url = encodeURI('http://124.109.62.126:8889/reports/rwservlet?&report=D:\\NEWACC\\REP\\LEDGERs.Rdf&userid=zahid/pak@XE&destype=cache&desformat=pdf&ENTER_ACCOUNT_NO=' + full.AccountNumber + '&from_date=' + fromDate + '&enter_unit=' + $('#unitYear').val() + '&to_date=' + toDate + '&paramform=no');
                     return '<a target="_blank" href="' + url + '">' + data + '</a>';
                 }
             },
@@ -123,34 +128,10 @@ function salesPartyWiseGrid() {
         "order": [[0, 'asc']],
         dom: 'Bfrtip',
         buttons: [
-            $.extend(true, {}, buttonCommon, {
-                extend: 'copyHtml5',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-                },
-                footer: true
-            }),
-            $.extend(true, {}, buttonCommon, {
-                extend: 'excelHtml5',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-                },
-                footer: true
-            }),
-            $.extend(true, {}, buttonCommon, {
-                extend: 'print',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-                },
-                footer: true
-            }),
-            $.extend(true, {}, buttonCommon, {
-                extend: 'pdfHtml5',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-                },
-                footer: true
-            })
+            { extend: 'copyHtml5', footer: true },
+            { extend: 'csvHtml5', footer: true },
+            { extend: 'print', footer: true },
+            { extend: 'pdfHtml5', footer: true }
         ],
         "footerCallback": function (row, data, start, end, display) {
             var api = this.api(), data;
@@ -172,7 +153,7 @@ function salesPartyWiseGrid() {
                 }, 0);
 
 
-            
+
 
             // Total over all pages
             totalPR = api
@@ -356,34 +337,10 @@ function ProductWiseSalesGrid() {
         "order": [[0, 'asc']],
         dom: 'Bfrtip',
         buttons: [
-            $.extend(true, {}, buttonCommon, {
-                extend: 'copyHtml5',
-                exportOptions: {
-                    columns: [0, 1.2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-                },
-                footer: true
-            }),
-            $.extend(true, {}, buttonCommon, {
-                extend: 'excelHtml5',
-                exportOptions: {
-                    columns: [0, 1.2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-                },
-                footer: true
-            }),
-            $.extend(true, {}, buttonCommon, {
-                extend: 'print',
-                exportOptions: {
-                    columns: [0, 1.2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-                },
-                footer: true
-            }),
-            $.extend(true, {}, buttonCommon, {
-                extend: 'pdfHtml5',
-                exportOptions: {
-                    columns: [0, 1.2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-                },
-                footer: true
-            })
+            { extend: 'copyHtml5', footer: true },
+            { extend: 'csvHtml5', footer: true },
+            { extend: 'print', footer: true },
+            { extend: 'pdfHtml5', footer: true }
         ],
         "footerCallback": function (row, data, start, end, display) {
             var api = this.api(), data;
@@ -625,34 +582,10 @@ function ProductWise3rdGrid() {
         "order": [[0, 'asc']],
         dom: 'Bfrtip',
         buttons: [
-            $.extend(true, {}, buttonCommon, {
-                extend: 'copyHtml5',
-                exportOptions: {
-                    columns: [0, 1.2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-                },
-                footer: true
-            }),
-            $.extend(true, {}, buttonCommon, {
-                extend: 'excelHtml5',
-                exportOptions: {
-                    columns: [0, 1.2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-                },
-                footer: true
-            }),
-            $.extend(true, {}, buttonCommon, {
-                extend: 'print',
-                exportOptions: {
-                    columns: [0, 1.2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-                },
-                footer: true
-            }),
-            $.extend(true, {}, buttonCommon, {
-                extend: 'pdfHtml5',
-                exportOptions: {
-                    columns: [0, 1.2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-                },
-                footer: true
-            })
+            { extend: 'copyHtml5', footer: true },
+            { extend: 'csvHtml5', footer: true },
+            { extend: 'print', footer: true },
+            { extend: 'pdfHtml5', footer: true }
         ],
         "footerCallback": function (row, data, start, end, display) {
             var api = this.api(), data;
@@ -863,34 +796,10 @@ function ProductWise4thGrid() {
         "order": [[0, 'asc']],
         dom: 'Bfrtip',
         buttons: [
-            $.extend(true, {}, buttonCommon, {
-                extend: 'copyHtml5',
-                exportOptions: {
-                    columns: [0, 1.2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-                },
-                footer: true
-            }),
-            $.extend(true, {}, buttonCommon, {
-                extend: 'excelHtml5',
-                exportOptions: {
-                    columns: [0, 1.2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-                },
-                footer: true
-            }),
-            $.extend(true, {}, buttonCommon, {
-                extend: 'print',
-                exportOptions: {
-                    columns: [0, 1.2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-                },
-                footer: true
-            }),
-            $.extend(true, {}, buttonCommon, {
-                extend: 'pdfHtml5',
-                exportOptions: {
-                    columns: [0, 1.2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-                },
-                footer: true
-            })
+            { extend: 'copyHtml5', footer: true },
+            { extend: 'csvHtml5', footer: true },
+            { extend: 'print', footer: true },
+            { extend: 'pdfHtml5', footer: true }
         ],
         "footerCallback": function (row, data, start, end, display) {
             var api = this.api(), data;
