@@ -29,7 +29,7 @@ function salesPartyWiseGrid() {
             format: {
                 body: function (data, row, column, node) {
                     // Strip $ from salary column to make it numeric
-                    
+
                     if (column == 0) {
                         return data;
                     } else {
@@ -45,21 +45,23 @@ function salesPartyWiseGrid() {
         ajax: "/dashboard/GetSalesDashBoardPartyWiseSale?fromDate=" + $("#fromDate").val() + "&toDate=" + $("#toDate").val(),
         columns: [
             { "data": "Name", "title": "Name" },
-            { "data": "OpeningBalance", "title": "OpeningBalance" },
-            { "data": "TotalSale", "title": "TotalSale" },
-            { "data": "PaymentReceived", "title": "PaymentReceived" },
+            { "data": "OpeningBalance", "title": "Opening Balance" },
+            { "data": "TotalSale", "title": "Total Sale" },
+            { "data": "", "title": "Total Balance" },
+            { "data": "PaymentReceived", "title": "Payment Received" },
             { "data": "Salary", "title": "Salary" },
-            { "data": "ZonalExpense", "title": "ZonalExpense" },
-            { "data": "TotalRecovery", "title": "TotalRecovery" },
+            { "data": "ZonalExpense", "title": "Zonal Expense" },
             { "data": "CLAI", "title": "CLAI" },
-            { "data": "Transfer", "title": "Transfer" }
+            { "data": "Transfer", "title": "Transfer" },
+            { "data": "TotalRecovery", "title": "Total Recovery" },
+            { "data": "", "title": "Current Balance" }
         ],
         "columnDefs": [
             {
                 "targets": [0],
                 "render": function (data, type, full, meta) {
                     var url = encodeURI('http://124.109.62.126:8889/reports/rwservlet?&report=D:\\NEWACC\\REP\\LEDGERs.Rdf&userid=zahid/pak@XE&destype=cache&desformat=pdf&ENTER_ACCOUNT_NO=' + full.AccountNumber + '&from_date=01-JUN-20&enter_unit=' + $('#unitYear').val() + '&to_date=08-JUL-20&paramform=no');
-                    return '<a href="' + url + '">' + data + '</a>';
+                    return '<a target="_blank" href="' + url + '">' + data + '</a>';
                 }
             },
             {
@@ -73,6 +75,9 @@ function salesPartyWiseGrid() {
             {
                 "targets": [3],
                 "className": "text-right",
+                "render": function (data, type, full, meta) {
+                    return parseInt(full.OpeningBalance) + parseInt(full.TotalSale);
+                }
             },
             {
                 "targets": [4],
@@ -98,6 +103,21 @@ function salesPartyWiseGrid() {
                 "targets": [8],
                 "className": "text-right",
             }
+            ,
+            {
+                "targets": [9],
+                "className": "text-right",
+                "render": function (data, type, full, meta) {
+                    return parseInt(full.PaymentReceived) + parseInt(full.Salary) + parseInt(full.ZonalExpense) + parseInt(full.CLAI) + parseInt(full.Transfer);
+                }
+            },
+            {
+                "targets": [10],
+                "className": "text-right",
+                "render": function (data, type, full, meta) {
+                    return (parseInt(full.OpeningBalance) + parseInt(full.TotalSale)) - (parseInt(full.PaymentReceived) + parseInt(full.Salary) + parseInt(full.ZonalExpense) + parseInt(full.CLAI) + parseInt(full.Transfer));
+                }
+            }
         ],
         "bDestroy": true,
         "order": [[0, 'asc']],
@@ -106,28 +126,28 @@ function salesPartyWiseGrid() {
             $.extend(true, {}, buttonCommon, {
                 extend: 'copyHtml5',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                 },
                 footer: true
             }),
             $.extend(true, {}, buttonCommon, {
                 extend: 'excelHtml5',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                 },
                 footer: true
             }),
             $.extend(true, {}, buttonCommon, {
                 extend: 'print',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                 },
                 footer: true
             }),
             $.extend(true, {}, buttonCommon, {
                 extend: 'pdfHtml5',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                 },
                 footer: true
             })
@@ -136,7 +156,7 @@ function salesPartyWiseGrid() {
             var api = this.api(), data;
 
             // Total over all pages
-            totalSaleTarget = api
+            totalOB = api
                 .column(1)
                 .data()
                 .reduce(function (a, b) {
@@ -144,7 +164,7 @@ function salesPartyWiseGrid() {
                 }, 0);
 
             // Total over all pages
-            totalOrder = api
+            totalSale = api
                 .column(2)
                 .data()
                 .reduce(function (a, b) {
@@ -152,77 +172,89 @@ function salesPartyWiseGrid() {
                 }, 0);
 
 
-            // Total over all pages
-            totalSale = api
-                .column(3)
-                .data()
-                .reduce(function (a, b) {
-                    return parseInt(a) + parseInt(b);
-                }, 0);
+            
 
             // Total over all pages
-            remainingSale = api
+            totalPR = api
                 .column(4)
                 .data()
                 .reduce(function (a, b) {
                     return parseInt(a) + parseInt(b);
                 }, 0);
 
-            expense = api
+            totalSalary = api
                 .column(5)
                 .data()
                 .reduce(function (a, b) {
                     return parseInt(a) + parseInt(b);
                 }, 0);
 
-            totalRecover = api
+
+
+            totalZonalExpense = api
                 .column(6)
                 .data()
                 .reduce(function (a, b) {
                     return parseInt(a) + parseInt(b);
                 }, 0);
 
-            clai = api
+            totalCLAI = api
                 .column(7)
                 .data()
                 .reduce(function (a, b) {
                     return parseInt(a) + parseInt(b);
                 }, 0);
 
-            transfer = api
+            totalTransfer = api
                 .column(8)
                 .data()
                 .reduce(function (a, b) {
                     return parseInt(a) + parseInt(b);
                 }, 0);
 
+            totalRecover = api
+                .column(8)
+                .data()
+                .reduce(function (a, b) {
+                    return parseInt(a) + parseInt(b);
+                }, 0);
+
+            var totalBalance = (parseInt(totalOB) + parseInt(totalSale));
+            var totalRecover = (parseInt(totalOB) + parseInt(totalSale) + parseInt(totalOB) + parseInt(totalSale) + parseInt(totalOB));
+            var currrentBalance = parseInt(totalBalance) + parseInt(totalRecover);
             // Update footer
             $(api.column(1).footer()).html(
-                '<b><span id="footerTotal">' + totalSaleTarget + '</span></b>'
+                '<b><span id="footerTotal">' + totalOB + '</span></b>'
             );
 
             $(api.column(2).footer()).html(
-                '<b><span id="footerTotal">' + totalOrder + '</span></b>'
-            );
-
-            $(api.column(3).footer()).html(
                 '<b><span id="footerTotal">' + totalSale + '</span></b>'
             );
 
+            $(api.column(3).footer()).html(
+                '<b><span id="footerTotal">' + totalBalance + '</span></b>'
+            );
+
             $(api.column(4).footer()).html(
-                '<b><span id="footerTotal">' + remainingSale + '</span></b>'
+                '<b><span id="footerTotal">' + totalPR + '</span></b>'
             );
             $(api.column(5).footer()).html(
-                '<b><span id="footerTotal">' + expense + '</span></b>'
+                '<b><span id="footerTotal">' + totalSalary + '</span></b>'
             );
             $(api.column(6).footer()).html(
-                '<b><span id="footerTotal">' + totalRecover + '</span></b>'
+                '<b><span id="footerTotal">' + totalZonalExpense + '</span></b>'
             );
             $(api.column(7).footer()).html(
-                '<b><span id="footerTotal">' + clai + '</span></b>'
+                '<b><span id="footerTotal">' + totalCLAI + '</span></b>'
             );
             $(api.column(8).footer()).html(
-                '<b><span id="footerTotal">' + transfer + '</span></b>'
+                '<b><span id="footerTotal">' + totalTransfer + '</span></b>'
+            );
+            $(api.column(9).footer()).html(
+                '<b><span id="footerTotal">' + totalBalance + '</span></b>'
+            );
+            $(api.column(10).footer()).html(
+                '<b><span id="footerTotal">' + currrentBalance + '</span></b>'
             );
         }
     });
@@ -735,7 +767,7 @@ function ProductWise3rdGrid() {
     });
 
 
-    
+
 }
 
 function ProductWise4thGrid() {

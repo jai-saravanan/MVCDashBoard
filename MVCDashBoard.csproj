@@ -836,6 +836,9 @@
     <Content Include="AdminLTE\plugins\ckeditor\skins\moono\readme.md" />
     <Content Include="AdminLTE\plugins\input-mask\phone-codes\phone-be.json" />
     <Content Include="AdminLTE\plugins\input-mask\phone-codes\phone-codes.json" />
+    <None Include="Properties\PublishProfiles\posdemoapp - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\posdemoapp - ReadOnly - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\posdemoapp - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\dashboard.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
