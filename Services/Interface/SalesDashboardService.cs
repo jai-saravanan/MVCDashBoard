@@ -22,19 +22,19 @@ namespace MVCDashBoard.Services.Interface
             return _oracleConnectionClient.GetSalesGridOpeningBalance(fromData, toDate, unitYear);
         }
 
-        public List<ProductWiseSalesReport> GetProductWiseReport(DateTime toDate, string unitYear)
+        public List<ProductWiseSalesReport> GetProductWiseReport(int year, string unitYear)
         {
-            return _oracleConnectionClient.GetProductWiseReport(toDate, unitYear);
+            return _oracleConnectionClient.GetProductWiseReport(year, unitYear);
         }
 
-        public List<ThirdGridSalesReport> ThirdGridGetProductWiseReport(DateTime toDate, string unitYear)
+        public List<ThirdGridSalesReport> ThirdGridGetProductWiseReport(int year, string unitYear)
         {
-            return _oracleConnectionClient.ThirdGridGetProductWiseReport(toDate, unitYear);
+            return _oracleConnectionClient.ThirdGridGetProductWiseReport(year, unitYear);
         }
 
-        public List<FourthGridSalesReport> FourthGridGetProductWiseReport(DateTime toDate, string unitYear)
+        public List<FourthGridSalesReport> FourthGridGetProductWiseReport(int year, string unitYear)
         {
-            return _oracleConnectionClient.FourthGridGetProductWiseReport(toDate, unitYear);
+            return _oracleConnectionClient.FourthGridGetProductWiseReport(year, unitYear);
         }
     }
 }

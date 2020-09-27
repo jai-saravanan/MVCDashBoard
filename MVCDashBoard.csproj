@@ -147,6 +147,7 @@
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\PurchaseDashboardController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -154,9 +155,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Implementation\AccountService.cs" />
     <Compile Include="Services\Implementation\IDashBoardService.cs" />
+    <Compile Include="Services\Implementation\IPurchaseDashboardService.cs" />
     <Compile Include="Services\Implementation\ISalesDashboardService.cs" />
     <Compile Include="Services\Interface\DashBoardService.cs" />
     <Compile Include="Services\Interface\IAccountService.cs" />
+    <Compile Include="Services\Interface\PurchaseDashboardService.cs" />
     <Compile Include="Services\Interface\SalesDashboardService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -872,6 +875,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\PurchaseDashboard\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

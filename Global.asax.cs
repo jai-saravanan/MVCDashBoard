@@ -38,6 +38,7 @@ namespace MVCDashBoard
             builder.RegisterType<AccountService>().As<IAccountService>();
             builder.RegisterType<DashBoardService>().As<IDashBoardService>();
             builder.RegisterType<SalesDashboardService>().As<ISalesDashboardService>();
+            builder.RegisterType<PurchaseDashboardService>().As<IPurchaseDashboardService>();
             
 
             // You can register any other dependencies here

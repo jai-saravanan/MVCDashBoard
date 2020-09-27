@@ -13,10 +13,10 @@ namespace MVCDashBoard.Services.Interface
 
         List<OpeningBalanceData> GetSalesGridOpeningBalance(DateTime fromData, DateTime toDate, string unitYear);
 
-        List<ProductWiseSalesReport> GetProductWiseReport(DateTime toDate, string unitYear);
+        List<ProductWiseSalesReport> GetProductWiseReport(int year, string unitYear);
 
-        List<ThirdGridSalesReport> ThirdGridGetProductWiseReport(DateTime toDate, string unitYear);
+        List<ThirdGridSalesReport> ThirdGridGetProductWiseReport(int year, string unitYear);
 
-        List<FourthGridSalesReport> FourthGridGetProductWiseReport(DateTime toDate, string unitYear);
+        List<FourthGridSalesReport> FourthGridGetProductWiseReport(int year, string unitYear);
     }
 }

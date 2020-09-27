@@ -181,31 +181,31 @@ namespace MVCDashBoard.Controllers
             return Json(new { data = outerData2ndGrid.OrderBy(x => x.Name) }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetSalesDashBoardProductWiseSale(DateTime toDate)
+        public JsonResult GetSalesDashBoardProductWiseSale(int year)
         {
             _sessionInfo = Session["UserInfo"] as SessionInfo;
             // first grid
-            var outerData2ndGrid = _salesDashboardService.GetProductWiseReport(toDate, _sessionInfo.UnitYear);
+            var outerData2ndGrid = _salesDashboardService.GetProductWiseReport(year, _sessionInfo.UnitYear);
 
 
             return Json(new { data = outerData2ndGrid.OrderBy(x => x.Name) }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult ThirdGridGetSalesDashBoard(DateTime toDate)
+        public JsonResult ThirdGridGetSalesDashBoard(int year)
         {
             _sessionInfo = Session["UserInfo"] as SessionInfo;
             // first grid
-            var outerData2ndGrid = _salesDashboardService.ThirdGridGetProductWiseReport(toDate, _sessionInfo.UnitYear);
+            var outerData2ndGrid = _salesDashboardService.ThirdGridGetProductWiseReport(year, _sessionInfo.UnitYear);
 
 
             return Json(new { data = outerData2ndGrid.OrderBy(x => x.Description) }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult FourthGridGetSalesDashBoard(DateTime toDate)
+        public JsonResult FourthGridGetSalesDashBoard(int year)
         {
             _sessionInfo = Session["UserInfo"] as SessionInfo;
             // first grid
-            var outerData2ndGrid = _salesDashboardService.FourthGridGetProductWiseReport(toDate, _sessionInfo.UnitYear);
+            var outerData2ndGrid = _salesDashboardService.FourthGridGetProductWiseReport(year, _sessionInfo.UnitYear);
 
 
             return Json(new { data = outerData2ndGrid.OrderBy(x => x.Name) }, JsonRequestBehavior.AllowGet);

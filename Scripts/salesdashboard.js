@@ -7,6 +7,7 @@ $(document).ready(function () {
     var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
     $("#fromDate").datepicker().datepicker("setDate", firstDay);
     $("#toDate").datepicker().datepicker("setDate", lastDay);;
+
     // party wise sales
     salesPartyWiseGrid();
 
@@ -17,6 +18,9 @@ $(document).ready(function () {
     ProductWise3rdGrid();
 
     ProductWise4thGrid();
+
+
+
 
 });
 

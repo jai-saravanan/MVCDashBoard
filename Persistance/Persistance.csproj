@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="OracleConnectionClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PurchaseDashboard.cs" />
     <Compile Include="SalesDashboard.cs" />
   </ItemGroup>
   <ItemGroup>
