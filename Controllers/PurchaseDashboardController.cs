@@ -21,12 +21,16 @@ namespace MVCDashBoard.Controllers
             _purchaseDashboardService = purchaseDashboardService;
         }
 
-        // GET: PurchaseDashboard
-        public JsonResult GetDashBoardPartyWisePurchaseData()
+        public ActionResult PurchaseDashBoard()
         {
             _sessionInfo = Session["UserInfo"] as SessionInfo;
-            var fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-6);
-            var toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1, 1).AddMonths(-4).AddDays(-1);
+            return View(model: _sessionInfo.UnitYear);
+        }
+
+        // GET: PurchaseDashboard
+        public JsonResult GetDashBoardPartyWisePurchaseData(DateTime fromDate, DateTime toDate)
+        {
+            _sessionInfo = Session["UserInfo"] as SessionInfo;
 
             // first grid
             var outerData2ndGrid = _dashBoardService.PartyWisePurchaseOuterGrid(fromDate, toDate, _sessionInfo.UnitYear);
@@ -45,7 +49,7 @@ namespace MVCDashBoard.Controllers
             return Json(new { data = outerData2ndGrid.OrderBy(x => x.ProductName) }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetSalesDashBoardProductWiseSale(int year)
+        public JsonResult GetPartyWisePurchaseGrid(int year)
         {
             _sessionInfo = Session["UserInfo"] as SessionInfo;
             // first grid
@@ -55,7 +59,7 @@ namespace MVCDashBoard.Controllers
             return Json(new { data = outerData2ndGrid.OrderBy(x => x.Name) }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult ThirdGridGetSalesDashBoard(int year)
+        public JsonResult ProductWisePurchaseGridData(int year)
         {
             _sessionInfo = Session["UserInfo"] as SessionInfo;
             // first grid
@@ -65,7 +69,7 @@ namespace MVCDashBoard.Controllers
             return Json(new { data = outerData2ndGrid.OrderBy(x => x.Description) }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult FourthGridGetSalesDashBoard(int year)
+        public JsonResult ClaimreturnStockGridData(int year)
         {
             _sessionInfo = Session["UserInfo"] as SessionInfo;
             // first grid

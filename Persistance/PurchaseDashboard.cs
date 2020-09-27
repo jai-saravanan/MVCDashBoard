@@ -11,6 +11,9 @@ namespace Persistance
 {
     public class PurchaseDashboard : OracleConnectionClient
     {
+        
+
+
         public List<ProductWiseSalesReport> GetProductWiseReport(int year, string unitYear)
         {
             List<ProductWiseSalesReport> result = new List<ProductWiseSalesReport>();

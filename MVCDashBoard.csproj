@@ -854,6 +854,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\purchasedashboard.js" />
     <Content Include="Scripts\salesdashboard.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -872,10 +873,10 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Dashboard\SalesDashBoard.cshtml" />
+    <Content Include="Views\PurchaseDashboard\PurchaseDashBoard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\PurchaseDashboard\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

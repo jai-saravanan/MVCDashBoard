@@ -1,6 +1,8 @@
-﻿var salesTable;
-var partyWiseRecoveryGrid;
-var partyWise3rdGrid;
+﻿var monthlyPurchaseGrid;
+var partyWisePurchaseGrid;
+var productWisePurchaseGrid;
+var claimreturnStockGrid;
+
 $(document).ready(function () {
     var date = new Date();
     var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -8,128 +10,64 @@ $(document).ready(function () {
     $("#fromDate").datepicker().datepicker("setDate", firstDay);
     $("#toDate").datepicker().datepicker("setDate", lastDay);;
 
-    // party wise sales
-    salesPartyWiseGrid();
 
-
-    // party wise recovery grid
-    ProductWiseSalesGrid();
-
-    ProductWise3rdGrid();
-
-    ProductWise4thGrid();
-
-
-
-
+    monthlyPurchaseGridFn();
+    partyWisePurchaseGridFn();
+    productWisePurchaseGridFn();
+    claimreturnStockGridFn();
 });
 
-function salesPartyWiseGrid() {
-
-
+function monthlyPurchaseGridFn() {
 
     var buttonCommon = {
         exportOptions: {
             format: {
                 body: function (data, row, column, node) {
                     // Strip $ from salary column to make it numeric
-
-                    if (column == 0) {
-                        return data;
-                    } else {
-                        return data;
-                    }
-
+                    return data;
                 }
             }
         }
     };
 
-    salesTable = $('#salesPartyWiseGrid').DataTable({
-        ajax: "/dashboard/GetSalesDashBoardPartyWiseSale?fromDate=" + $("#fromDate").val() + "&toDate=" + $("#toDate").val(),
+    monthlyPurchaseGrid = $('#monthlyPurchaseGrid').DataTable({
+        ajax: "/PurchaseDashboard/GetDashBoardPartyWisePurchaseData?fromDate=" + $("#fromDate").val() + "&toDate=" + $("#toDate").val(),
         columns: [
-            { "data": "Name", "title": "Name" },
-            { "data": "OpeningBalance", "title": "Opening Balance" },
-            { "data": "TotalSale", "title": "Total Sale" },
-            { "data": "", "title": "Total Balance" },
-            { "data": "PaymentReceived", "title": "Payment Received" },
-            { "data": "Salary", "title": "Salary" },
-            { "data": "ZonalExpense", "title": "Zonal Expense" },
-            { "data": "CLAI", "title": "CLAI" },
-            { "data": "Transfer", "title": "Transfer" },
-            { "data": "TotalRecovery", "title": "Total Recovery" },
-            { "data": "", "title": "Current Balance" }
+
+            { "data": "ProductCode" },
+            {
+                "class": "details-control",
+                "orderable": false,
+                "data": null,
+                "defaultContent": ""
+            },
+            { "data": "ProductName", "class": "details-control-click" },
+            { "data": "TotalPurchaseOrder" },
+            { "data": "TotalPurchase" },
+            { "data": "RemainingPurchase" }
         ],
         "columnDefs": [
             {
                 "targets": [0],
-                "render": function (data, type, full, meta) {
-
-                    var tempFromDate = $('#fromDate').val().split('/');
-                    var fromDate = tempFromDate[1] + '/' + tempFromDate[0] + '/' + tempFromDate[2];
-                    var tempToDate = $('#toDate').val().split('/');
-                    var toDate = tempToDate[1] + '/' + tempToDate[0] + '/' + tempToDate[2];
-                    var url = encodeURI('http://124.109.62.126:8889/reports/rwservlet?&report=D:\\NEWACC\\REP\\LEDGERs.Rdf&userid=zahid/pak@XE&destype=cache&desformat=pdf&ENTER_ACCOUNT_NO=' + full.AccountNumber + '&from_date=' + fromDate + '&enter_unit=' + $('#unitYear').val() + '&to_date=' + toDate + '&paramform=no');
-                    return '<a target="_blank" href="' + url + '">' + data + '</a>';
-                }
-            },
-            {
-                "targets": [1],
-                "className": "text-right",
-            },
-            {
-                "targets": [2],
-                "className": "text-right",
+                "visible": false,
+                "searchable": false,
             },
             {
                 "targets": [3],
                 "className": "text-right",
-                "render": function (data, type, full, meta) {
-                    return parseInt(full.OpeningBalance) + parseInt(full.TotalSale);
-                }
             },
             {
                 "targets": [4],
                 "className": "text-right",
-            },
-            {
-                "targets": [5],
-                "className": "text-right",
-            },
-            {
-                "targets": [6],
-                "className": "text-right",
-            },
-            {
-                "targets": [6],
-                "className": "text-right",
-            },
-            {
-                "targets": [7],
-                "className": "text-right",
-            },
-            {
-                "targets": [8],
-                "className": "text-right",
             }
             ,
             {
-                "targets": [9],
+                "targets": [5],
                 "className": "text-right",
-                "render": function (data, type, full, meta) {
-                    return parseInt(full.PaymentReceived) + parseInt(full.Salary) + parseInt(full.ZonalExpense) + parseInt(full.CLAI) + parseInt(full.Transfer);
-                }
-            },
-            {
-                "targets": [10],
-                "className": "text-right",
-                "render": function (data, type, full, meta) {
-                    return (parseInt(full.OpeningBalance) + parseInt(full.TotalSale)) - (parseInt(full.PaymentReceived) + parseInt(full.Salary) + parseInt(full.ZonalExpense) + parseInt(full.CLAI) + parseInt(full.Transfer));
-                }
             }
         ],
         "bDestroy": true,
-        "order": [[0, 'asc']],
+        "order": [[2, 'asc']],
         dom: 'Bfrtip',
         buttons: [
             { extend: 'copyHtml5', footer: true },
@@ -141,33 +79,24 @@ function salesPartyWiseGrid() {
             var api = this.api(), data;
 
             // Total over all pages
-            totalOB = api
-                .column(1)
+            totalSaleTarget = api
+                .column(3)
                 .data()
                 .reduce(function (a, b) {
                     return parseInt(a) + parseInt(b);
                 }, 0);
 
             // Total over all pages
-            totalSale = api
-                .column(2)
-                .data()
-                .reduce(function (a, b) {
-                    return parseInt(a) + parseInt(b);
-                }, 0);
-
-
-
-
-            // Total over all pages
-            totalPR = api
+            totalOrder = api
                 .column(4)
                 .data()
                 .reduce(function (a, b) {
                     return parseInt(a) + parseInt(b);
                 }, 0);
 
-            totalSalary = api
+
+            // Total over all pages
+            totalSale = api
                 .column(5)
                 .data()
                 .reduce(function (a, b) {
@@ -175,80 +104,60 @@ function salesPartyWiseGrid() {
                 }, 0);
 
 
-
-            totalZonalExpense = api
-                .column(6)
-                .data()
-                .reduce(function (a, b) {
-                    return parseInt(a) + parseInt(b);
-                }, 0);
-
-            totalCLAI = api
-                .column(7)
-                .data()
-                .reduce(function (a, b) {
-                    return parseInt(a) + parseInt(b);
-                }, 0);
-
-            totalTransfer = api
-                .column(8)
-                .data()
-                .reduce(function (a, b) {
-                    return parseInt(a) + parseInt(b);
-                }, 0);
-
-            totalRecover = api
-                .column(8)
-                .data()
-                .reduce(function (a, b) {
-                    return parseInt(a) + parseInt(b);
-                }, 0);
-
-            var totalBalance = (parseInt(totalOB) + parseInt(totalSale));
-            var totalRecover = (parseInt(totalOB) + parseInt(totalSale) + parseInt(totalOB) + parseInt(totalSale) + parseInt(totalOB));
-            var currrentBalance = parseInt(totalBalance) + parseInt(totalRecover);
             // Update footer
-            $(api.column(1).footer()).html(
-                '<b><span id="footerTotal">' + totalOB + '</span></b>'
-            );
-
-            $(api.column(2).footer()).html(
-                '<b><span id="footerTotal">' + totalSale + '</span></b>'
-            );
-
             $(api.column(3).footer()).html(
-                '<b><span id="footerTotal">' + totalBalance + '</span></b>'
+                '<b><span id="footerTotal">' + totalSaleTarget + '</span></b>'
             );
 
             $(api.column(4).footer()).html(
-                '<b><span id="footerTotal">' + totalPR + '</span></b>'
+                '<b><span id="footerTotal">' + totalOrder + '</span></b>'
             );
+
             $(api.column(5).footer()).html(
-                '<b><span id="footerTotal">' + totalSalary + '</span></b>'
+                '<b><span id="footerTotal">' + totalSale + '</span></b>'
             );
-            $(api.column(6).footer()).html(
-                '<b><span id="footerTotal">' + totalZonalExpense + '</span></b>'
-            );
-            $(api.column(7).footer()).html(
-                '<b><span id="footerTotal">' + totalCLAI + '</span></b>'
-            );
-            $(api.column(8).footer()).html(
-                '<b><span id="footerTotal">' + totalTransfer + '</span></b>'
-            );
-            $(api.column(9).footer()).html(
-                '<b><span id="footerTotal">' + totalBalance + '</span></b>'
-            );
-            $(api.column(10).footer()).html(
-                '<b><span id="footerTotal">' + currrentBalance + '</span></b>'
-            );
+
         }
     });
 
+    // Array to track the ids of the details displayed rows
+    var detailRows = [];
 
+
+    $('#monthlyPurchaseGrid tbody').on('click', 'tr td.details-control,tr td.details-control-click', function () {
+        var tr = $(this).closest('tr');
+        var row = monthlyPurchaseGrid.row(tr);
+        var idx = $.inArray(tr.attr('id'), detailRows);
+
+        if (row.child.isShown()) {
+            tr.removeClass('details');
+            row.child.hide();
+
+            // Remove from the 'open' array
+            detailRows.splice(idx, 1);
+        }
+        else {
+            tr.addClass('details');
+            row.child(formatPurchase(row.data())).show();
+
+            // Add to the 'open' array
+            if (idx === -1) {
+                detailRows.push(tr.attr('id'));
+            }
+        }
+    });
+
+    // On each draw, loop over the `detailRows` array and show any child rows
+    monthlyPurchaseGrid.on('draw', function () {
+        $.each(detailRows, function (i, id) {
+            $('#' + id + ' td.details-control').trigger('click');
+        });
+    });
 }
 
 
-function ProductWiseSalesGrid() {
+
+function partyWisePurchaseGridFn() {
 
 
 
@@ -263,8 +172,8 @@ function ProductWiseSalesGrid() {
         }
     };
 
-    partyWiseRecoveryGrid = $('#salesPartyWise2ndGrid').DataTable({
-        ajax: "/dashboard/GetSalesDashBoardProductWiseSale?year=2020",// + $("#toDate").val(),
+    partyWisePurchaseGrid = $('#partyWisePurchaseGrid').DataTable({
+        ajax: "/PurchaseDashboard/GetPartyWisePurchaseGrid?year=2020", //+ $("#toDate").val(),
         columns: [
 
             { "data": "Name", "title": "Name" },
@@ -458,42 +367,9 @@ function ProductWiseSalesGrid() {
         }
     });
 
-    // Array to track the ids of the details displayed rows
-    var detailRows = [];
-
-
-    $('#partyWiseRecoveryGrid tbody').on('click', 'tr td.details-control,tr td.details-control-click', function () {
-        var tr = $(this).closest('tr');
-        var row = partyWiseRecoveryGrid.row(tr);
-        var idx = $.inArray(tr.attr('id'), detailRows);
-
-        if (row.child.isShown()) {
-            tr.removeClass('details');
-            row.child.hide();
-
-            // Remove from the 'open' array
-            detailRows.splice(idx, 1);
-        }
-        else {
-            tr.addClass('details');
-            row.child(partyWiseRecoveryInner(row.data())).show();
-
-            // Add to the 'open' array
-            if (idx === -1) {
-                detailRows.push(tr.attr('id'));
-            }
-        }
-    });
-
-    // On each draw, loop over the `detailRows` array and show any child rows
-    partyWiseRecoveryGrid.on('draw', function () {
-        $.each(detailRows, function (i, id) {
-            $('#' + id + ' td.details-control').trigger('click');
-        });
-    });
 }
 
-function ProductWise3rdGrid() {
+function productWisePurchaseGridFn() {
 
 
 
@@ -508,8 +384,8 @@ function ProductWise3rdGrid() {
         }
     };
 
-    partyWise3rdGrid = $('#salesPartyWise3rdGrid').DataTable({
-        ajax: "/dashboard/ThirdGridGetSalesDashBoard?year=2020",// + $("#toDate").val(),
+    productWisePurchaseGrid = $('#productWisePurchaseGrid').DataTable({
+        ajax: "/PurchaseDashboard/ProductWisePurchaseGridData?year=2020",// + $("#toDate").val(),
         columns: [
 
             { "data": "Description", "title": "Description" },
@@ -707,7 +583,7 @@ function ProductWise3rdGrid() {
 
 }
 
-function ProductWise4thGrid() {
+function claimreturnStockGridFn() {
 
 
 
@@ -722,8 +598,8 @@ function ProductWise4thGrid() {
         }
     };
 
-    partyWise4thGrid = $('#salesPartyWise4thGrid').DataTable({
-        ajax: "/dashboard/FourthGridGetSalesDashBoard?year=2020",// + $("#toDate").val(),
+    claimreturnStockGrid = $('#claimreturnStockGrid').DataTable({
+        ajax: "/PurchaseDashboard/ClaimreturnStockGridData?year=2020",// + $("#toDate").val(),
         columns: [
 
             { "data": "Name", "title": "Name" },
@@ -922,37 +798,44 @@ function ProductWise4thGrid() {
 }
 
 
-function format(d) {
-    var order = d.OrderDetail[0] == undefined ? '&nbsp;&nbsp;&nbsp;&nbsp;   -' : d.OrderDetail[0];
-    var dispatch = d.OrderDetail[1] == undefined ? '&nbsp;&nbsp;&nbsp;&nbsp;    -' : d.OrderDetail[1];
-    return '<b>Full name:</b> ' + d.Name + ' <br>' +
-        '<b>Order:</b> ' + order + '.<br>' +
-        '<b>Dispatch:</b> ' + dispatch + ''
+
+function formatPurchase(d) {
+    debugger
+    console.log(JSON.stringify(d.OrderDetail));
+    var content = '<table id="styleforinner"><tr><th>Product Name</th><th>Rate</th><th>Orders</th><th>Received</th></tr>';
+    for (var i = 0; i < d.OrderDetail.length; i++) {
+        content = content + '<tr><td>' + d.OrderDetail[i].ProductName + ' </td><td>' + d.OrderDetail[i].Rate + ' </td><td>' + d.OrderDetail[i].Orders + ' </td><td>' + d.OrderDetail[i].Received + ' </td></tr>'
+
+    }
+    content = content + '</table>';
+    return content;
 }
 
-function partyWiseRecoveryInner(d) {
-    return '';
-}
 
 function reloadGrid() {
     //The datatable needed to be destroyed if existed.
-    $('#salesPartyWiseGrid').DataTable().destroy();
-    salesTable = null;
+    $('#monthlyPurchaseGrid').DataTable().destroy();
+    monthlyPurchaseGrid = null;
+
+    monthlyPurchaseGridFn();
+
 
     //The datatable needed to be destroyed if existed.
-    $('#salesPartyWise2ndGrid').DataTable().destroy();
-    partyWiseRecoveryGrid = null;
+    $('#partyWisePurchaseGrid').DataTable().destroy();
+    partyWisePurchaseGrid = null;
 
-    $('#salesPartyWise3rdGrid').DataTable().destroy();
-    partyWise3rdGrid = null;
+    partyWisePurchaseGridFn();
 
-    $('#salesPartyWise4thGrid').DataTable().destroy();
-    partyWise3rdGrid = null;
+    $('#productWisePurchaseGrid').DataTable().destroy();
+    productWisePurchaseGrid = null;
 
-    salesPartyWiseGrid();
-    ProductWiseSalesGrid();
+    productWisePurchaseGridFn();
 
-    ProductWise3rdGrid();
 
-    ProductWise4thGrid();
+    $('#claimreturnStockGrid').DataTable().destroy();
+    claimreturnStockGrid = null;
+
+    claimreturnStockGridFn();
+
+
 }
