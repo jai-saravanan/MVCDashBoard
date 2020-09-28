@@ -42,9 +42,12 @@ function monthlyPurchaseGridFn() {
                 "defaultContent": ""
             },
             { "data": "ProductName", "class": "details-control-click" },
+            { "data": "OpeningBalance" },
             { "data": "TotalPurchaseOrder" },
             { "data": "TotalPurchase" },
-            { "data": "RemainingPurchase" }
+            { "data": "RemainingPurchase" },
+            { "data": "TotalPayment" },
+            { "data": "CurrentBalance" }
         ],
         "columnDefs": [
             {
@@ -64,6 +67,18 @@ function monthlyPurchaseGridFn() {
             {
                 "targets": [5],
                 "className": "text-right",
+            },
+            {
+                "targets": [6],
+                "className": "text-right",
+            },
+            {
+                "targets": [7],
+                "className": "text-right",
+            },
+            {
+                "targets": [8],
+                "className": "text-right",
             }
         ],
         "bDestroy": true,
@@ -79,7 +94,7 @@ function monthlyPurchaseGridFn() {
             var api = this.api(), data;
 
             // Total over all pages
-            totalSaleTarget = api
+            openingBalance = api
                 .column(3)
                 .data()
                 .reduce(function (a, b) {
@@ -87,7 +102,7 @@ function monthlyPurchaseGridFn() {
                 }, 0);
 
             // Total over all pages
-            totalOrder = api
+            totalPurchaseOrder = api
                 .column(4)
                 .data()
                 .reduce(function (a, b) {
@@ -96,25 +111,59 @@ function monthlyPurchaseGridFn() {
 
 
             // Total over all pages
-            totalSale = api
+            totalPurchase = api 
                 .column(5)
                 .data()
                 .reduce(function (a, b) {
                     return parseInt(a) + parseInt(b);
                 }, 0);
 
+            // Total over all pages
+            remainingPurchase = api
+                .column(6)
+                .data()
+                .reduce(function (a, b) {
+                    return parseInt(a) + parseInt(b);
+                }, 0);
+
+            // Total over all pages
+            totalPayment = api
+                .column(7)
+                .data()
+                .reduce(function (a, b) {
+                    return parseInt(a) + parseInt(b);
+                }, 0);
+
+            currentBalance = api
+                .column(8)
+                .data()
+                .reduce(function (a, b) {
+                    return parseInt(a) + parseInt(b);
+                }, 0);
 
             // Update footer
             $(api.column(3).footer()).html(
-                '<b><span id="footerTotal">' + totalSaleTarget + '</span></b>'
+                '<b><span id="footerTotal">' + openingBalance + '</span></b>'
             );
 
             $(api.column(4).footer()).html(
-                '<b><span id="footerTotal">' + totalOrder + '</span></b>'
+                '<b><span id="footerTotal">' + totalPurchaseOrder + '</span></b>'
             );
 
             $(api.column(5).footer()).html(
-                '<b><span id="footerTotal">' + totalSale + '</span></b>'
+                '<b><span id="footerTotal">' + totalPurchase + '</span></b>'
+            );
+
+            $(api.column(6).footer()).html(
+                '<b><span id="footerTotal">' + remainingPurchase + '</span></b>'
+            );
+
+            $(api.column(7).footer()).html(
+                '<b><span id="footerTotal">' + totalPayment + '</span></b>'
+            );
+
+            $(api.column(8).footer()).html(
+                '<b><span id="footerTotal">' + currentBalance + '</span></b>'
             );
 
         }

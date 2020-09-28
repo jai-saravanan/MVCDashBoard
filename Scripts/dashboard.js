@@ -1,22 +1,21 @@
 ﻿
+var example, exampleUrl = '/dashboard/getdashboardpartywisesalesdata';
+var partyWiseRecoveryGrid, partyWiseRecoveryGridUrl = '/dashboard/GetDashBoardPartyWiseRecoveryData';
+var expenseGrid, expenseGridUrl = '/dashboard/GetDashBoardExpensesData';
+var partyWisePurchaseGrid, partyWisePurchaseGridUrl = '/dashboard/GetDashBoardPartyWisePurchaseData';
+
+
+
 $(document).ready(function () {
-    $.ajax({
-        url: "/DashBoard/GetDashBoardData", success: function (result) {
-            $('#totalTarget').text(result.totalSaleTarget);
-            $('#thisMonthOrder').text(result.totalOrder);
-            $('#thisMonthSale').text(result.totalSale);
-            $('#remainingTarget').text(result.remainingTarget);
-            $('#totalRecoveryTarget').text(result.totalRecoveryTarget);
-            $('#totalReceived').text(result.recoveryReceived);
-            $('#remainingRecovery').text(result.remainingRecovery);
-            $('#totalCashInHand').text(result.cashInHand);
-            $('#totalInBanks').text(result.cashInBank);
-            $('#totalCashAndBanks').text(result.totalCashAndBanks);
-            $('#totalPurchaseOrder').text(result.totalPurchaseOrder);
-            $('#totalPurchase').text(result.totalPurchase);
-            $('#remainingPurchase').text(result.remainingPurchase);
-        }
-    });
+
+    var date = new Date();
+    var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    $("#fromDate").datepicker().datepicker("setDate", firstDay);
+    $("#toDate").datepicker().datepicker("setDate", lastDay);;
+
+
+    cumulativeData();
 
 
     // party wise sales
@@ -47,8 +46,8 @@ function partyWiseSaleGrid() {
             }
         }
     };
-    var dt = $('#example').DataTable({
-        ajax: "/dashboard/getdashboardpartywisesalesdata",
+    example = $('#example').DataTable({
+        ajax: exampleUrl + '?fromDate=' + $("#fromDate").val() + '&toDate=' + $("#toDate").val() + '',
         columns: [
 
             { "data": "AccountNumber" },
@@ -173,10 +172,9 @@ function partyWiseSaleGrid() {
     // Array to track the ids of the details displayed rows
     var detailRows = [];
 
-
     $('#example tbody').on('click', 'tr td.details-control,tr td.details-control-click', function () {
         var tr = $(this).closest('tr');
-        var row = dt.row(tr);
+        var row = example.row(tr);
         var idx = $.inArray(tr.attr('id'), detailRows);
 
         if (row.child.isShown()) {
@@ -198,7 +196,7 @@ function partyWiseSaleGrid() {
     });
 
     // On each draw, loop over the `detailRows` array and show any child rows
-    dt.on('draw', function () {
+    example.on('draw', function () {
         $.each(detailRows, function (i, id) {
             $('#' + id + ' td.details-control').trigger('click');
         });
@@ -219,8 +217,8 @@ function partyWiseRecoveryGrid() {
         }
     };
 
-    var partyWiseRecoveryGrid = $('#partyWiseRecoveryGrid').DataTable({
-        ajax: "/dashboard/GetDashBoardPartyWiseRecoveryData",
+    partyWiseRecoveryGrid = $('#partyWiseRecoveryGrid').DataTable({
+        ajax: partyWiseRecoveryGridUrl + '?fromDate=' + $("#fromDate").val() + '&toDate=' + $("#toDate").val() + '',
         columns: [
 
             { "data": "ProductCode" },
@@ -376,8 +374,8 @@ function expancesGrid() {
         }
     };
 
-    var expenseGrid = $('#expenseGrid').DataTable({
-        ajax: "/dashboard/GetDashBoardExpensesData",
+    expenseGrid = $('#expenseGrid').DataTable({
+        ajax: expenseGridUrl + '?fromDate=' + $("#fromDate").val() + '&toDate=' + $("#toDate").val() + '',
         columns: [
 
             { "data": "ProductCode" },
@@ -533,8 +531,8 @@ function partyWisePurchaseGrid() {
         }
     };
 
-    var partyWisePurchaseGrid = $('#partyWisePurchaseGrid').DataTable({
-        ajax: "/dashboard/GetDashBoardPartyWisePurchaseData",
+    partyWisePurchaseGrid = $('#partyWisePurchaseGrid').DataTable({
+        ajax: partyWisePurchaseGridUrl + '?fromDate=' + $("#fromDate").val() + '&toDate=' + $("#toDate").val() + '',
         columns: [
 
             { "data": "ProductCode" },
@@ -687,7 +685,6 @@ function format(d) {
 }
 
 function formatPurchase(d) {
-    debugger
     console.log(JSON.stringify(d.OrderDetail));
     var content = '<table id="styleforinner"><tr><th>Product Name</th><th>Rate</th><th>Orders</th><th>Received</th></tr>';
     for (var i = 0; i < d.OrderDetail.length; i++) {
@@ -695,11 +692,10 @@ function formatPurchase(d) {
 
     }
     content = content + '</table>';
-    return content; 
+    return content;
 }
 
 function partyWiseRecoveryInner(d) {
-    debugger
     console.log(JSON.stringify(d.InnerInfo));
     var content = '<table id="styleforinner"><tr><th>Date</th><th>Particular</th><th>Amount</th></tr>';
     for (var i = 0; i < d.InnerInfo.length; i++) {
@@ -710,3 +706,56 @@ function partyWiseRecoveryInner(d) {
     return content;
 }
 
+function reloadGrid() {
+    //The datatable needed to be destroyed if existed.
+    example.clear().draw();
+    partyWiseRecoveryGrid.clear().draw();
+    expenseGrid.clear().draw();
+    partyWisePurchaseGrid.clear().draw();
+
+    cumulativeData();
+
+    $.ajax({
+        url: exampleUrl + '?fromDate=' + $("#fromDate").val() + '&toDate=' + $("#toDate").val() + '', success: function (result) {
+            example.rows.add(result.data).draw();
+        }
+    });
+
+    $.ajax({
+        url: partyWiseRecoveryGridUrl + '?fromDate=' + $("#fromDate").val() + '&toDate=' + $("#toDate").val() + '', success: function (result) {
+            partyWiseRecoveryGrid.rows.add(result.data).draw();
+        }
+    });
+
+    $.ajax({
+        url: expenseGridUrl + '?fromDate=' + $("#fromDate").val() + '&toDate=' + $("#toDate").val() + '', success: function (result) {
+            expenseGrid.rows.add(result.data).draw();
+        }
+    });
+
+    $.ajax({
+        url: partyWisePurchaseGridUrl + '?fromDate=' + $("#fromDate").val() + '&toDate=' + $("#toDate").val() + '', success: function (result) {
+            partyWisePurchaseGrid.rows.add(result.data).draw();
+        }
+    });
+}
+
+function cumulativeData() {
+    $.ajax({
+        url: "/DashBoard/GetDashBoardData?fromDate=" + $("#fromDate").val() + "&toDate=" + $("#toDate").val(), success: function (result) {
+            $('#totalTarget').text(result.totalSaleTarget);
+            $('#thisMonthOrder').text(result.totalOrder);
+            $('#thisMonthSale').text(result.totalSale);
+            $('#remainingTarget').text(result.remainingTarget);
+            $('#totalRecoveryTarget').text(result.totalRecoveryTarget);
+            $('#totalReceived').text(result.recoveryReceived);
+            $('#remainingRecovery').text(result.remainingRecovery);
+            $('#totalCashInHand').text(result.cashInHand);
+            $('#totalInBanks').text(result.cashInBank);
+            $('#totalCashAndBanks').text(result.totalCashAndBanks);
+            $('#totalPurchaseOrder').text(result.totalPurchaseOrder);
+            $('#totalPurchase').text(result.totalPurchase);
+            $('#remainingPurchase').text(result.remainingPurchase);
+        }
+    });
+}

@@ -11,6 +11,12 @@ namespace Domain.Models
         public string RemainingPurchase { get; set; }
 
         public List<PartyWisePurchaseInnerInfo> OrderDetail { get; set; }
+
+        public string OpeningBalance { get; set; }
+
+        public string TotalPayment { get; set; }
+
+        public string CurrentBalance { get; set; }
     }
             
     public class PartyWisePurchaseInnerInfo

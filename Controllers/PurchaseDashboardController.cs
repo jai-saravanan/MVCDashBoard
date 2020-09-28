@@ -36,6 +36,10 @@ namespace MVCDashBoard.Controllers
             var outerData2ndGrid = _dashBoardService.PartyWisePurchaseOuterGrid(fromDate, toDate, _sessionInfo.UnitYear);
             var innerData2ndGrid = _dashBoardService.PartyWisePurchaseInnerGrid(fromDate, toDate, _sessionInfo.UnitYear);
 
+            var openingBalance = _purchaseDashboardService.GetOpeningBalance(fromDate, toDate, _sessionInfo.UnitYear);
+
+            var totalPayment = _purchaseDashboardService.GetTotalPayment(fromDate, toDate, _sessionInfo.UnitYear);
+
             foreach (var item in outerData2ndGrid)
             {
                 var orderDetail = innerData2ndGrid?.Where(x => x.Name == item.ProductName)?.OrderBy(x => x.ProductName).ToList();
@@ -44,6 +48,11 @@ namespace MVCDashBoard.Controllers
                     item.OrderDetail = new List<PartyWisePurchaseInnerInfo>();
                     item.OrderDetail.AddRange(orderDetail);
                 }
+
+                item.OpeningBalance = Convert.ToString(Math.Round(openingBalance.FirstOrDefault(x => x.Name == item.ProductName)?.OpeningBalance ?? 0, 0));
+                item.TotalPayment = Convert.ToString(Math.Round(totalPayment.FirstOrDefault(x => x.Name == item.ProductName)?.TotalPayment ?? 0, 0));
+
+                item.CurrentBalance = Convert.ToString(Convert.ToInt32(item.OpeningBalance) - (Convert.ToInt32(item.TotalPurchase) + Convert.ToInt32(item.TotalPayment)));
 
             }
             return Json(new { data = outerData2ndGrid.OrderBy(x => x.ProductName) }, JsonRequestBehavior.AllowGet);

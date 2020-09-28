@@ -45,6 +45,8 @@
     <Compile Include="Models\PartyWisePurchaseInfo.cs" />
     <Compile Include="Models\PartyWiseRecoveryInfo.cs" />
     <Compile Include="Models\PartyWiseSaleOuterInfo.cs" />
+    <Compile Include="Models\Purchase\PurchaseOpeningBalanceData.cs" />
+    <Compile Include="Models\Purchase\PurchaseTotalPaymentData.cs" />
     <Compile Include="Models\SalesDashBoard.cs" />
     <Compile Include="Models\Sales\ProductWiseSalesReport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

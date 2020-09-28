@@ -35,11 +35,9 @@ namespace MVCDashBoard.Controllers
             return View(model: _sessionInfo.UnitYear);
         }
 
-        public JsonResult GetDashBoardData()
+        public JsonResult GetDashBoardData(DateTime fromDate, DateTime toDate)
         {
             _sessionInfo = Session["UserInfo"] as SessionInfo;
-            var fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-6);
-            var toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1, 1).AddMonths(-4);
             var totalSaleTarget = _dashBoardService.GetSaleTarget("1007", _sessionInfo.UnitYear);
             var totalOrder = _dashBoardService.GetTotalOrder(fromDate, toDate, _sessionInfo.UnitYear);
             var totalSale = _dashBoardService.GetTotalSale(fromDate, toDate, _sessionInfo.UnitYear);
@@ -75,11 +73,9 @@ namespace MVCDashBoard.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetDashBoardPartyWiseSalesData()
+        public JsonResult GetDashBoardPartyWiseSalesData(DateTime fromDate, DateTime toDate)
         {
             _sessionInfo = Session["UserInfo"] as SessionInfo;
-            var fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-6);
-            var toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1, 1).AddMonths(-4).AddDays(-1);
 
             // first grid
             var outerData = _dashBoardService.PartyWiseSaleOuterGrid(fromDate, toDate, _sessionInfo.UnitYear);
@@ -99,11 +95,9 @@ namespace MVCDashBoard.Controllers
             return Json(new { data = outerData.OrderBy(x => x.Name) }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetDashBoardPartyWiseRecoveryData()
+        public JsonResult GetDashBoardPartyWiseRecoveryData(DateTime fromDate, DateTime toDate)
         {
             _sessionInfo = Session["UserInfo"] as SessionInfo;
-            var fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-6);
-            var toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1, 1).AddMonths(-4).AddDays(-1);
 
             // first grid
             var outerData2ndGrid = _dashBoardService.PartyWiseRecoveryOutterGrid(fromDate, toDate, _sessionInfo.UnitYear);
@@ -122,11 +116,9 @@ namespace MVCDashBoard.Controllers
             return Json(new { data = outerData2ndGrid.OrderBy(x => x.ProductName) }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetDashBoardExpensesData()
+        public JsonResult GetDashBoardExpensesData(DateTime fromDate, DateTime toDate)
         {
             _sessionInfo = Session["UserInfo"] as SessionInfo;
-            var fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-6);
-            var toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1, 1).AddMonths(-4).AddDays(-1);
 
             var outerData2ndGrid = _dashBoardService.ExpencesOutterGrid(fromDate, toDate, _sessionInfo.UnitYear);
             var innerData2ndGrid = _dashBoardService.ExpencesInnerGrid(fromDate, toDate, _sessionInfo.UnitYear);
@@ -144,12 +136,9 @@ namespace MVCDashBoard.Controllers
             return Json(new { data = outerData2ndGrid.OrderBy(x => x.ProductName) }, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetDashBoardPartyWisePurchaseData()
+        public JsonResult GetDashBoardPartyWisePurchaseData(DateTime fromDate, DateTime toDate)
         {
             _sessionInfo = Session["UserInfo"] as SessionInfo;
-            var fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-6);
-            var toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1, 1).AddMonths(-4).AddDays(-1);
-
             // first grid
             var outerData2ndGrid = _dashBoardService.PartyWisePurchaseOuterGrid(fromDate, toDate, _sessionInfo.UnitYear);
             var innerData2ndGrid = _dashBoardService.PartyWisePurchaseInnerGrid(fromDate, toDate, _sessionInfo.UnitYear);
