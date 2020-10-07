@@ -17,6 +17,16 @@
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
     <link href="~/AdminLTE/dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
+    <style>
+        .table-header {
+            margin-top: 0px;
+            background-color: #00c0ef !important;
+            color: white;
+            margin-right: -5px;
+            margin-left: -5px;
+            padding: 5px;
+        }
+    </style>
 </head>
 @{
     var sessionInfo = Session["UserInfo"] as SessionInfo; ;
