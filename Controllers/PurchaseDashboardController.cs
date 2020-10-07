@@ -52,7 +52,7 @@ namespace MVCDashBoard.Controllers
                 item.OpeningBalance = Convert.ToString(Math.Round(openingBalance.FirstOrDefault(x => x.Name == item.ProductName)?.OpeningBalance ?? 0, 0));
                 item.TotalPayment = Convert.ToString(Math.Round(totalPayment.FirstOrDefault(x => x.Name == item.ProductName)?.TotalPayment ?? 0, 0));
 
-                item.CurrentBalance = Convert.ToString(Convert.ToInt32(item.OpeningBalance) - (Convert.ToInt32(item.TotalPurchase) + Convert.ToInt32(item.TotalPayment)));
+                item.CurrentBalance = Convert.ToString(Convert.ToInt32(item.OpeningBalance) - Convert.ToInt32(item.TotalPurchase) + Convert.ToInt32(item.TotalPayment));
 
             }
             return Json(new { data = outerData2ndGrid.OrderBy(x => x.ProductName) }, JsonRequestBehavior.AllowGet);

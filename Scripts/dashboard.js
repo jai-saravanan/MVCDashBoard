@@ -14,23 +14,23 @@ $(document).ready(function () {
     $("#fromDate").datepicker().datepicker("setDate", firstDay);
     $("#toDate").datepicker().datepicker("setDate", lastDay);;
 
-
-    cumulativeData();
-
-
-    // party wise sales
-    partyWiseSaleGrid();
+    setTimeout(function () {
+        cumulativeData();
 
 
-    // party wise recovery grid
-    partyWiseRecoveryGrid();
+        // party wise sales
+        partyWiseSaleGrid();
 
-    // expense grid
-    expancesGrid();
 
-    // party wise purchase grid
-    partyWisePurchaseGrid();
+        // party wise recovery grid
+        partyWiseRecoveryGrid();
 
+        // expense grid
+        expancesGrid();
+
+        // party wise purchase grid
+        partyWisePurchaseGrid();
+    }, 1000);
 
 });
 
